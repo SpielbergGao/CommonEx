@@ -4,70 +4,70 @@ import android.content.Context
 import android.view.View
 
 
-fun View.gone() {
+fun View.goneExt() {
     visibility = View.GONE
 }
 
-fun View.visible() {
+fun View.visibleExt() {
     visibility = View.VISIBLE
 }
 
-fun View.invisible() {
+fun View.invisibleExt() {
     visibility = View.INVISIBLE
 }
 
-val View.isGone: Boolean
+val View.isGoneExt: Boolean
     get() {
         return visibility == View.GONE
     }
 
-val View.isVisible: Boolean
+val View.isVisibleExt: Boolean
     get() {
         return visibility == View.VISIBLE
     }
 
-val View.isInvisible: Boolean
+val View.isInvisibleExt: Boolean
     get() {
         return visibility == View.INVISIBLE
     }
 
-fun View.toggleVisibility() {
+fun View.toggleVisibilityExt() {
     visibility = if (visibility == View.GONE) View.VISIBLE else View.GONE
 }
 
-fun View.getViewLocationArr(): IntArray {
+fun View.getViewLocationArrExt(): IntArray {
     val viewLoc = intArrayOf(0, 0)
     getLocationOnScreen(viewLoc)
     return viewLoc
 }
 
-fun View.hasLeftSpace(popupContentView: View): Boolean {
-    val viewLoc = getViewLocationArr()
+fun View.hasLeftSpaceExt(popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArrExt()
     if (viewLoc[0] <= popupContentView.measuredWidth) {
         return false
     }
     return true
 }
 
-fun View.hasRightSpace(mCtx: Context, popupContentView: View): Boolean {
-    val viewLoc = getViewLocationArr()
-    if (getScreenWidth(mCtx) - viewLoc[0] - width <= popupContentView.measuredWidth) {
+fun View.hasRightSpaceExt(mCtx: Context, popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArrExt()
+    if (mCtx.getScreenWidthExt() - viewLoc[0] - width <= popupContentView.measuredWidth) {
         return false
     }
     return true
 }
 
-fun View.hasTopSpace(popupContentView: View): Boolean {
-    val viewLoc = getViewLocationArr()
+fun View.hasTopSpaceExt(popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArrExt()
     if (viewLoc[1] <= popupContentView.measuredHeight) {
         return false
     }
     return true
 }
 
-fun View.hasBottomSpace(mCtx: Context, popupContentView: View): Boolean {
-    val viewLoc = getViewLocationArr()
-    if (getScreenHeight(mCtx) - viewLoc[1] - height <= popupContentView.measuredHeight) {
+fun View.hasBottomSpaceExt(mCtx: Context, popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArrExt()
+    if (mCtx.getScreenHeightExt() - viewLoc[1] - height <= popupContentView.measuredHeight) {
         return false
     }
     return true
