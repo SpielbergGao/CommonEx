@@ -1,7 +1,16 @@
 package com.spielberg.commonext
 
+import android.animation.Animator
+import android.animation.IntEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.recyclerview.widget.RecyclerView
 
 
 fun View.goneExt() {
@@ -71,4 +80,198 @@ fun View.hasBottomSpaceExt(mCtx: Context, popupContentView: View): Boolean {
         return false
     }
     return true
+}
+
+fun View.toBitmapExt(): Bitmap {
+    if (measuredWidth == 0 || measuredHeight == 0) {
+        throw RuntimeException("调用该方法时，请确保View已经测量完毕，如果宽高为0，则抛出异常以提醒！")
+    }
+    return when (this) {
+        is RecyclerView -> {
+            this.scrollToPosition(0)
+            this.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            )
+
+            val bmp = Bitmap.createBitmap(width, measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+
+            //draw default bg, otherwise will be black
+            if (background != null) {
+                background.setBounds(0, 0, width, measuredHeight)
+                background.draw(canvas)
+            } else {
+                canvas.drawColor(Color.WHITE)
+            }
+            this.draw(canvas)
+            //恢复高度
+            this.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST)
+            )
+            bmp //return
+        }
+        else -> {
+            val screenshot =
+                Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_4444)
+            val canvas = Canvas(screenshot)
+            if (background != null) {
+                background.setBounds(0, 0, width, measuredHeight)
+                background.draw(canvas)
+            } else {
+                canvas.drawColor(Color.WHITE)
+            }
+            draw(canvas)
+            screenshot
+        }
+    }
+}
+
+fun View.addOnGlobalLayoutListenerExt(onGlobalLayout:()->Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
+            onGlobalLayout()
+        }
+    })
+}
+
+fun View.width(width: Int): View {
+    val params = layoutParams ?: ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    params.width = width
+    layoutParams = params
+    return this
+}
+
+fun View.height(height: Int): View {
+    val params = layoutParams ?: ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    params.height = height
+    layoutParams = params
+    return this
+}
+
+fun View.limitWidth(w: Int, min: Int, max: Int): View {
+    val params = layoutParams ?: ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    when {
+        w < min -> params.width = min
+        w > max -> params.width = max
+        else -> params.width = w
+    }
+    layoutParams = params
+    return this
+}
+
+fun View.limitHeight(h: Int, min: Int, max: Int): View {
+    val params = layoutParams ?: ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    when {
+        h < min -> params.height = min
+        h > max -> params.height = max
+        else -> params.height = h
+    }
+    layoutParams = params
+    return this
+}
+
+fun View.widthAndHeight(width: Int, height: Int): View {
+    val params = layoutParams ?: ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    params.width = width
+    params.height = height
+    layoutParams = params
+    return this
+}
+
+/**
+ * 设置宽度，带有过渡动画
+ * @param targetValue 目标宽度
+ * @param duration 时长
+ * @param action 可选行为
+ */
+fun View.animateWidth(
+    targetValue: Int, duration: Long = 400, listener: Animator.AnimatorListener? = null,
+    action: ((Float) -> Unit)? = null
+) {
+    post {
+        ValueAnimator.ofInt(width, targetValue).apply {
+            addUpdateListener {
+                width(it.animatedValue as Int)
+                action?.invoke((it.animatedFraction))
+            }
+            if (listener != null) addListener(listener)
+            setDuration(duration)
+            start()
+        }
+    }
+}
+
+/**
+ * 设置高度，带有过渡动画
+ * @param targetValue 目标高度
+ * @param duration 时长
+ * @param action 可选行为
+ */
+fun View.animateHeight(
+    targetValue: Int,
+    duration: Long = 400,
+    listener: Animator.AnimatorListener? = null,
+    action: ((Float) -> Unit)? = null
+) {
+    post {
+        ValueAnimator.ofInt(height, targetValue).apply {
+            addUpdateListener {
+                height(it.animatedValue as Int)
+                action?.invoke((it.animatedFraction))
+            }
+            if (listener != null) addListener(listener)
+            setDuration(duration)
+            start()
+        }
+    }
+}
+
+/**
+ * 设置宽度和高度，带有过渡动画
+ * @param targetWidth 目标宽度
+ * @param targetHeight 目标高度
+ * @param duration 时长
+ * @param action 可选行为
+ */
+fun View.animateWidthAndHeight(
+    targetWidth: Int,
+    targetHeight: Int,
+    duration: Long = 400,
+    listener: Animator.AnimatorListener? = null,
+    action: ((Float) -> Unit)? = null
+) {
+    post {
+        val startHeight = height
+        val evaluator = IntEvaluator()
+        ValueAnimator.ofInt(width, targetWidth).apply {
+            addUpdateListener {
+                widthAndHeight(
+                    it.animatedValue as Int,
+                    evaluator.evaluate(it.animatedFraction, startHeight, targetHeight)
+                )
+                action?.invoke((it.animatedFraction))
+            }
+            if (listener != null) addListener(listener)
+            setDuration(duration)
+            start()
+        }
+    }
 }
