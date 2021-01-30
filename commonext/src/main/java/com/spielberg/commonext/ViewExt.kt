@@ -137,7 +137,7 @@ fun View.addOnGlobalLayoutListenerExt(onGlobalLayout:()->Unit) {
     })
 }
 
-fun View.width(width: Int): View {
+fun View.widthExt(width: Int): View {
     val params = layoutParams ?: ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -147,7 +147,7 @@ fun View.width(width: Int): View {
     return this
 }
 
-fun View.height(height: Int): View {
+fun View.heightExt(height: Int): View {
     val params = layoutParams ?: ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -157,7 +157,7 @@ fun View.height(height: Int): View {
     return this
 }
 
-fun View.limitWidth(w: Int, min: Int, max: Int): View {
+fun View.limitWidthExt(w: Int, min: Int, max: Int): View {
     val params = layoutParams ?: ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -171,7 +171,7 @@ fun View.limitWidth(w: Int, min: Int, max: Int): View {
     return this
 }
 
-fun View.limitHeight(h: Int, min: Int, max: Int): View {
+fun View.limitHeightExt(h: Int, min: Int, max: Int): View {
     val params = layoutParams ?: ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -185,7 +185,7 @@ fun View.limitHeight(h: Int, min: Int, max: Int): View {
     return this
 }
 
-fun View.widthAndHeight(width: Int, height: Int): View {
+fun View.widthAndHeightExt(width: Int, height: Int): View {
     val params = layoutParams ?: ViewGroup.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -202,14 +202,14 @@ fun View.widthAndHeight(width: Int, height: Int): View {
  * @param duration 时长
  * @param action 可选行为
  */
-fun View.animateWidth(
+fun View.animateWidthExt(
     targetValue: Int, duration: Long = 400, listener: Animator.AnimatorListener? = null,
     action: ((Float) -> Unit)? = null
 ) {
     post {
         ValueAnimator.ofInt(width, targetValue).apply {
             addUpdateListener {
-                width(it.animatedValue as Int)
+                widthExt(it.animatedValue as Int)
                 action?.invoke((it.animatedFraction))
             }
             if (listener != null) addListener(listener)
@@ -225,7 +225,7 @@ fun View.animateWidth(
  * @param duration 时长
  * @param action 可选行为
  */
-fun View.animateHeight(
+fun View.animateHeightExt(
     targetValue: Int,
     duration: Long = 400,
     listener: Animator.AnimatorListener? = null,
@@ -234,7 +234,7 @@ fun View.animateHeight(
     post {
         ValueAnimator.ofInt(height, targetValue).apply {
             addUpdateListener {
-                height(it.animatedValue as Int)
+                heightExt(it.animatedValue as Int)
                 action?.invoke((it.animatedFraction))
             }
             if (listener != null) addListener(listener)
@@ -251,7 +251,7 @@ fun View.animateHeight(
  * @param duration 时长
  * @param action 可选行为
  */
-fun View.animateWidthAndHeight(
+fun View.animateWidthAndHeightExt(
     targetWidth: Int,
     targetHeight: Int,
     duration: Long = 400,
@@ -263,7 +263,7 @@ fun View.animateWidthAndHeight(
         val evaluator = IntEvaluator()
         ValueAnimator.ofInt(width, targetWidth).apply {
             addUpdateListener {
-                widthAndHeight(
+                widthAndHeightExt(
                     it.animatedValue as Int,
                     evaluator.evaluate(it.animatedFraction, startHeight, targetHeight)
                 )
