@@ -275,3 +275,10 @@ fun View.animateWidthAndHeight(
         }
     }
 }
+
+fun View.makeMeasureSpecExt(measureSpec: Int): Int = when (measureSpec) {
+    ViewGroup.LayoutParams.WRAP_CONTENT ->
+        View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measureSpec), View.MeasureSpec.AT_MOST)
+    else ->
+        View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measureSpec), View.MeasureSpec.EXACTLY)
+}
