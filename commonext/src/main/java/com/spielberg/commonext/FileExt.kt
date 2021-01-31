@@ -279,4 +279,39 @@ fun moveExt(srcFilePath: String?, dstFilePath: String?): Boolean {
     return srcFile.renameTo(dstFile)
 }
 
+// 是否包含扩展名
+fun String.hasExtensionExt(): Boolean {
+    val dot = this.lastIndexOf('.')
+    return dot > -1 && dot < this.length - 1
+}
+
+// 获取文件扩展名
+fun String?.getExtensionNameExt(): String {
+    if (this.isEmptyOrBlankExt()) return ""
+    val dot = this!!.lastIndexOf('.')
+    if (dot > -1 && dot < this.length - 1) {
+        return this.substring(dot + 1)
+    }
+    return ""
+}
+
+// 获取文件名
+fun String?.getFileNameFromPathExt(): String? {
+    if (this.isEmptyOrBlankExt()) return null
+    val sep = this!!.lastIndexOf('/')
+    if (sep > -1 && sep < this.length - 1) {
+        return this.substring(sep + 1)
+    }
+    return null
+}
+
+// 获取不带扩展名的文件名
+fun String?.getFileNameNoExt(): String? {
+    if (this.isEmptyOrBlankExt()) return null
+    val dot = this!!.lastIndexOf('.')
+    if (dot > -1 && dot < this.length) {
+        return this.substring(0, dot)
+    }
+    return null
+}
 
