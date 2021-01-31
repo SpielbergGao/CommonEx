@@ -186,7 +186,7 @@ fun String?.copyFileExt(dstPath: String): Long {
  *  @describe 创建文件
  */
 fun String?.createFileExt(): File? {
-    if (this.isNullOrEmpty() || this.isNullOrBlank()) {
+    if (this.isEmptyOrBlankExt()) {
         return null
     }
     val f = File(this)
@@ -212,17 +212,23 @@ fun String?.createFileExt(): File? {
  *  @describe 获取文件长度 文件不存在则返回 -1
  */
 fun String?.getFileLengthExt(): Long {
-    if (this.isNullOrBlank() || this.isNullOrEmpty()) {
+    if (this.isEmptyOrBlankExt()) {
         return -1
     }
-    val srcFile = File(this)
+    val srcFile = File(this!!)
     return if (!srcFile.exists()) {
         -1
     } else srcFile.length()
 }
 
-fun save(path: String?, content: String): Long {
-    return save(content.toByteArray(), path)
+fun File?.getFileLengthExt(): Long {
+    if (this == null) return -1
+    if (!this.exists()) return -1
+    return this.length()
+}
+
+fun saveExt(path: String?, content: String): Long {
+    return saveExt(content.toByteArray(), path)
 }
 
 /**
@@ -232,7 +238,7 @@ fun save(path: String?, content: String): Long {
  * @param filePath
  * @return 如果保存失败, 则返回-1
  */
-fun save(data: ByteArray?, filePath: String?): Long {
+fun saveExt(data: ByteArray?, filePath: String?): Long {
     if (filePath.isNullOrEmpty() || filePath.isNullOrBlank()) {
         return -1
     }
@@ -254,3 +260,23 @@ fun save(data: ByteArray?, filePath: String?): Long {
     }
     return f.length()
 }
+
+fun moveExt(srcFilePath: String?, dstFilePath: String?): Boolean {
+    if (srcFilePath.isEmptyOrBlankExt() || dstFilePath.isEmptyOrBlankExt()) {
+        return false
+    }
+    val srcFile = File(srcFilePath!!)
+    if (!srcFile.exists() || !srcFile.isFile) {
+        return false
+    }
+    val dstFile = File(dstFilePath!!)
+    if (dstFile.parentFile == null) {
+        return false
+    }
+    if (!dstFile.parentFile!!.exists()) { // 如果不存在上级文件夹
+        dstFile.parentFile!!.mkdirs()
+    }
+    return srcFile.renameTo(dstFile)
+}
+
+
