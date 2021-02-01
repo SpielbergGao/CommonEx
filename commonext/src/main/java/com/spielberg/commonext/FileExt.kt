@@ -1,7 +1,11 @@
 package com.spielberg.commonext
 
 import android.content.Context
+import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Environment
+import android.os.FileUtils
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -313,5 +317,29 @@ fun String?.getFileNameNoExt(): String? {
         return this.substring(0, dot)
     }
     return null
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/1/21 8:27 PM
+ *  @describe Notify system to scan the file.
+ */
+fun String?.notifySystemToScan() {
+    this?.createFileExt()?.notifySystemToScanExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/1/21 8:27 PM
+ *  @describe Notify system to scan the file.
+ */
+fun File?.notifySystemToScanExt() {
+    if (this == null || !this.exists()) return
+    getApplicationByReflect()?.run {
+        MediaScannerConnection.scanFile(this, arrayOf(this@notifySystemToScanExt.toString()),
+            arrayOf(this@notifySystemToScanExt.name), null)
+    }
 }
 

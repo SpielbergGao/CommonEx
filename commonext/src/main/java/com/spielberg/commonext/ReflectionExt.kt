@@ -23,6 +23,25 @@ fun String.getClassInvokeMethodExt(methodName: String, parameterTypes: Array<Cla
     return null
 }
 
+fun String.getClassInvokeMethodExt(methodName: String): Method? {
+    try {
+        return Class.forName(this).getMethod(methodName)
+    } catch (e: SecurityException) {
+        e.printStackTrace()
+    } catch (e: java.lang.IllegalArgumentException) {
+        e.printStackTrace()
+    } catch (e: IllegalAccessException) {
+        e.printStackTrace()
+    } catch (e: NoSuchMethodException) {
+        e.printStackTrace()
+    } catch (e: InvocationTargetException) {
+        e.printStackTrace()
+    } catch (e: ClassNotFoundException) {
+        e.printStackTrace()
+    }
+    return null
+}
+
 fun String.getClassInvokeDeclaredFieldExt(filedName: String): Field? {
     try {
         return Class.forName(this).getDeclaredField(filedName)
