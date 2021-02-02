@@ -1,14 +1,16 @@
 package com.spielberg.commonext
 
 import android.content.Context
-import android.content.Intent
 import android.media.MediaScannerConnection
-import android.net.Uri
+import android.os.Build
 import android.os.Environment
-import android.os.FileUtils
+import android.os.StatFs
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.security.DigestInputStream
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 /** * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context  */
 fun Context.cleanInternalCacheExt() {
@@ -212,6 +214,16 @@ fun String?.createFileExt(): File? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:44 PM
+ *  @describe Return the file by path.
+ */
+fun String?.getFileByPathExt(): File? {
+    return if (this.isEmptyOrBlankExt()) null else File(this)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
  *  @date: 1/30/21 9:53 PM
  *  @describe 获取文件长度 文件不存在则返回 -1
  */
@@ -283,23 +295,40 @@ fun moveExt(srcFilePath: String?, dstFilePath: String?): Boolean {
     return srcFile.renameTo(dstFile)
 }
 
-// 是否包含扩展名
-fun String.hasExtensionExt(): Boolean {
-    val dot = this.lastIndexOf('.')
-    return dot > -1 && dot < this.length - 1
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:34 PM
+ *  @describe Return the name of file without extension.
+ */
+fun File?.getFileNameNoExtensionExt(): String? {
+    return if (this == null) "" else path.getFileNameNoExtensionExt()
 }
 
-// 获取文件扩展名
-fun String?.getExtensionNameExt(): String {
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:33 PM
+ *  @describe Return the name of file without extension.
+ */
+fun String.getFileNameNoExtensionExt(): String? {
     if (this.isEmptyOrBlankExt()) return ""
-    val dot = this!!.lastIndexOf('.')
-    if (dot > -1 && dot < this.length - 1) {
-        return this.substring(dot + 1)
+    val lastPoi = this.lastIndexOf('.')
+    val lastSep = this.lastIndexOf(File.separator)
+    if (lastSep == -1) {
+        return if (lastPoi == -1) this else this.substring(0, lastPoi)
     }
-    return ""
+    return if (lastPoi == -1 || lastSep > lastPoi) {
+        this.substring(lastSep + 1)
+    } else this.substring(lastSep + 1, lastPoi)
 }
 
-// 获取文件名
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:32 PM
+ *  @describe 获取文件名
+ */
 fun String?.getFileNameFromPathExt(): String? {
     if (this.isEmptyOrBlankExt()) return null
     val sep = this!!.lastIndexOf('/')
@@ -309,7 +338,56 @@ fun String?.getFileNameFromPathExt(): String? {
     return null
 }
 
-// 获取不带扩展名的文件名
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:36 PM
+ *  @describe Return the name of file.
+ */
+fun String.getFileNameExt(): String? {
+    if (this.isEmptyOrBlankExt()) return ""
+    val lastSep = this.lastIndexOf(File.separator)
+    return if (lastSep == -1) this else this.substring(lastSep + 1)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:38 PM
+ *  @describe Return the name of file.
+ */
+fun File?.getFileNameExt(file: File?): String? {
+    return if (file == null) "" else this!!.absolutePath.getFileNameExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:40 PM
+ *  @describe Return the file's path of directory.
+ */
+fun File?.getDirNameExt(): String? {
+    return if (this == null) "" else this.absolutePath.getDirNameExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:39 PM
+ *  @describe Return the file's path of directory.
+ */
+fun String.getDirNameExt(): String? {
+    if (this.isEmptyOrBlankExt()) return ""
+    val lastSep = this.lastIndexOf(File.separator)
+    return if (lastSep == -1) "" else this.substring(0, lastSep + 1)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:32 PM
+ *  @describe  获取不带扩展名的文件名
+ */
 fun String?.getFileNameNoExt(): String? {
     if (this.isEmptyOrBlankExt()) return null
     val dot = this!!.lastIndexOf('.')
@@ -317,6 +395,29 @@ fun String?.getFileNameNoExt(): String? {
         return this.substring(0, dot)
     }
     return null
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:30 PM
+ *  @describe Return the extension of file.
+ */
+fun File?.getFileExtensionExt(): String? {
+    return if (this == null) "" else path.getFileExtensionExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:29 PM
+ *  @describe Return the extension of file.
+ */
+fun String.getFileExtensionExt(): String? {
+    if (this.isEmptyOrBlankExt()) return ""
+    val lastPoi = this.lastIndexOf('.')
+    val lastSep = this.lastIndexOf(File.separator)
+    return if (lastPoi == -1 || lastSep >= lastPoi) "" else this.substring(lastPoi + 1)
 }
 
 /**
@@ -338,8 +439,117 @@ fun String?.notifySystemToScan() {
 fun File?.notifySystemToScanExt() {
     if (this == null || !this.exists()) return
     getApplicationByReflect()?.run {
-        MediaScannerConnection.scanFile(this, arrayOf(this@notifySystemToScanExt.toString()),
-            arrayOf(this@notifySystemToScanExt.name), null)
+        MediaScannerConnection.scanFile(
+            this, arrayOf(this@notifySystemToScanExt.toString()),
+            arrayOf(this@notifySystemToScanExt.name), null
+        )
     }
 }
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:25 PM
+ *  @describe Return the total size of file system.
+ */
+fun String?.getFsTotalSizeExt(): Long {
+    if (this.isEmptyOrBlankExt()) return 0
+    val statFs = StatFs(this)
+    val blockSize: Long
+    val totalSize: Long
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFs.blockSizeLong
+        totalSize = statFs.blockCountLong
+    } else {
+        blockSize = statFs.blockSize.toLong()
+        totalSize = statFs.blockCount.toLong()
+    }
+    return blockSize * totalSize
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:26 PM
+ *  @describe  Return the available size of file system.
+ */
+fun String?.getFsAvailableSizeExt(): Long {
+    if (this.isEmptyOrBlankExt()) return 0
+    val statFs = StatFs(this)
+    val blockSize: Long
+    val availableSize: Long
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFs.blockSizeLong
+        availableSize = statFs.availableBlocksLong
+    } else {
+        blockSize = statFs.blockSize.toLong()
+        availableSize = statFs.availableBlocks.toLong()
+    }
+    return blockSize * availableSize
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:41 PM
+ *  @describe  Return the MD5 of file.
+ */
+fun String?.getFileMD5ToStringExt(): String? {
+    val file = if (this.isEmptyOrBlankExt()) null else File(this!!)
+    return file.getFileMD5ToStringExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:41 PM
+ *  @describe Return the MD5 of file.
+ */
+fun File?.getFileMD5ToStringExt(): String? {
+    return this.getFileMD5Ext().bytes2HexStringExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:42 PM
+ *  @describe Return the MD5 of file.
+ */
+fun String?.getFileMD5Ext(): ByteArray? {
+    return this.getFileByPathExt().getFileMD5Ext()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/2/21 9:43 PM
+ *  @describe Return the MD5 of file.
+ */
+fun File?.getFileMD5Ext(): ByteArray? {
+    if (this == null) return null
+    var dis: DigestInputStream? = null
+    try {
+        val fis = FileInputStream(this)
+        var md = MessageDigest.getInstance("MD5")
+        dis = DigestInputStream(fis, md)
+        val buffer = ByteArray(1024 * 256)
+        while (true) {
+            if (dis.read(buffer) <= 0) break
+        }
+        md = dis.messageDigest
+        return md.digest()
+    } catch (e: NoSuchAlgorithmException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } finally {
+        try {
+            dis?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    return null
+}
+
 
