@@ -1,5 +1,8 @@
 package com.spielberg.commonext
 
+import android.annotation.SuppressLint
+import com.spielberg.commonext.constant.MemoryConstants
+
 
 private val HEX_DIGITS_UPPER =
     charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
@@ -40,4 +43,52 @@ fun ByteArray?.bytes2HexStringExt(isUpperCase: Boolean): String? {
         i++
     }
     return String(ret)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Size of byte to fit size of memory.
+ */
+fun byte2FitMemorySize(byteSize: Long): String? {
+    return byte2FitMemorySize(byteSize, 3)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @date: 2/3/21 9:14 PM
+ *  @describe Size of byte to fit size of memory.
+ *  @param byteSize  Size of byte.
+ *  @param precision The precision
+ */
+@SuppressLint("DefaultLocale")
+fun byte2FitMemorySize(byteSize: Long, precision: Int): String? {
+    require(precision >= 0) { "precision shouldn't be less than zero!" }
+    return when {
+        byteSize < 0 -> {
+            throw IllegalArgumentException("byteSize shouldn't be less than zero!")
+        }
+        byteSize < MemoryConstants.KB -> {
+            String.format("%." + precision + "fB", byteSize.toDouble())
+        }
+        byteSize < MemoryConstants.MB -> {
+            java.lang.String.format(
+                "%." + precision + "fKB",
+                byteSize.toDouble() / MemoryConstants.KB
+            )
+        }
+        byteSize < MemoryConstants.GB -> {
+            java.lang.String.format(
+                "%." + precision + "fMB",
+                byteSize.toDouble() / MemoryConstants.MB
+            )
+        }
+        else -> {
+            java.lang.String.format(
+                "%." + precision + "fGB",
+                byteSize.toDouble() / MemoryConstants.GB
+            )
+        }
+    }
 }

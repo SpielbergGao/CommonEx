@@ -1,9 +1,12 @@
 package com.spielberg.commonext
 
+import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.FileUtils
 import android.os.StatFs
 import java.io.*
 import java.nio.ByteBuffer
@@ -11,6 +14,9 @@ import java.nio.channels.FileChannel
 import java.security.DigestInputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.*
+
+private val LINE_SEP = System.getProperty("line.separator")
 
 /** * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context  */
 fun Context.cleanInternalCacheExt() {
@@ -81,7 +87,6 @@ private fun deleteFilesByDirectoryExt(directory: File?) {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 1/30/21 9:37 PM
  *  @describe 把文件从文件系统中读取出来
  *  @return 如果无法读取, 则返回null
  */
@@ -111,7 +116,6 @@ fun String.loadFileExt(): ByteArray? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 1/30/21 9:38 PM
  *  @describe 把文件从文件系统中读取出来
  *  @return 如果无法读取, 则返回null
  */
@@ -144,7 +148,6 @@ fun String?.isEmptyOrBlankExt(): Boolean {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 1/30/21 9:48 PM
  *  @describe 复制文件到指定目录 成功返回文件长度否则返回-1
  */
 fun String?.copyFileExt(dstPath: String): Long {
@@ -188,7 +191,6 @@ fun String?.copyFileExt(dstPath: String): Long {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 1/30/21 9:49 PM
  *  @describe 创建文件
  */
 fun String?.createFileExt(): File? {
@@ -214,7 +216,6 @@ fun String?.createFileExt(): File? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:44 PM
  *  @describe Return the file by path.
  */
 fun String?.getFileByPathExt(): File? {
@@ -224,7 +225,6 @@ fun String?.getFileByPathExt(): File? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 1/30/21 9:53 PM
  *  @describe 获取文件长度 文件不存在则返回 -1
  */
 fun String?.getFileLengthExt(): Long {
@@ -298,7 +298,6 @@ fun moveExt(srcFilePath: String?, dstFilePath: String?): Boolean {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:34 PM
  *  @describe Return the name of file without extension.
  */
 fun File?.getFileNameNoExtensionExt(): String? {
@@ -308,7 +307,6 @@ fun File?.getFileNameNoExtensionExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:33 PM
  *  @describe Return the name of file without extension.
  */
 fun String.getFileNameNoExtensionExt(): String? {
@@ -326,7 +324,6 @@ fun String.getFileNameNoExtensionExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:32 PM
  *  @describe 获取文件名
  */
 fun String?.getFileNameFromPathExt(): String? {
@@ -341,7 +338,6 @@ fun String?.getFileNameFromPathExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:36 PM
  *  @describe Return the name of file.
  */
 fun String.getFileNameExt(): String? {
@@ -353,7 +349,6 @@ fun String.getFileNameExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:38 PM
  *  @describe Return the name of file.
  */
 fun File?.getFileNameExt(file: File?): String? {
@@ -363,7 +358,6 @@ fun File?.getFileNameExt(file: File?): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:40 PM
  *  @describe Return the file's path of directory.
  */
 fun File?.getDirNameExt(): String? {
@@ -373,7 +367,6 @@ fun File?.getDirNameExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:39 PM
  *  @describe Return the file's path of directory.
  */
 fun String.getDirNameExt(): String? {
@@ -385,7 +378,6 @@ fun String.getDirNameExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:32 PM
  *  @describe  获取不带扩展名的文件名
  */
 fun String?.getFileNameNoExt(): String? {
@@ -400,7 +392,6 @@ fun String?.getFileNameNoExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:30 PM
  *  @describe Return the extension of file.
  */
 fun File?.getFileExtensionExt(): String? {
@@ -410,7 +401,6 @@ fun File?.getFileExtensionExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:29 PM
  *  @describe Return the extension of file.
  */
 fun String.getFileExtensionExt(): String? {
@@ -423,7 +413,6 @@ fun String.getFileExtensionExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/1/21 8:27 PM
  *  @describe Notify system to scan the file.
  */
 fun String?.notifySystemToScan() {
@@ -433,7 +422,6 @@ fun String?.notifySystemToScan() {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/1/21 8:27 PM
  *  @describe Notify system to scan the file.
  */
 fun File?.notifySystemToScanExt() {
@@ -449,7 +437,6 @@ fun File?.notifySystemToScanExt() {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:25 PM
  *  @describe Return the total size of file system.
  */
 fun String?.getFsTotalSizeExt(): Long {
@@ -470,7 +457,6 @@ fun String?.getFsTotalSizeExt(): Long {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:26 PM
  *  @describe  Return the available size of file system.
  */
 fun String?.getFsAvailableSizeExt(): Long {
@@ -491,7 +477,6 @@ fun String?.getFsAvailableSizeExt(): Long {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:41 PM
  *  @describe  Return the MD5 of file.
  */
 fun String?.getFileMD5ToStringExt(): String? {
@@ -502,7 +487,6 @@ fun String?.getFileMD5ToStringExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:41 PM
  *  @describe Return the MD5 of file.
  */
 fun File?.getFileMD5ToStringExt(): String? {
@@ -512,7 +496,6 @@ fun File?.getFileMD5ToStringExt(): String? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:42 PM
  *  @describe Return the MD5 of file.
  */
 fun String?.getFileMD5Ext(): ByteArray? {
@@ -522,7 +505,6 @@ fun String?.getFileMD5Ext(): ByteArray? {
 /**
  *  @author: long
  *  @email spielberggao@gmail.com
- *  @date: 2/2/21 9:43 PM
  *  @describe Return the MD5 of file.
  */
 fun File?.getFileMD5Ext(): ByteArray? {
@@ -551,5 +533,725 @@ fun File?.getFileMD5Ext(): ByteArray? {
     }
     return null
 }
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether the file exists.
+ */
+fun File?.isFileExists(): Boolean {
+    if (this == null) return false
+    return if (this.exists()) {
+        true
+    } else this.absolutePath.isFileExistsExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether the file exists.
+ */
+fun String?.isFileExistsExt(): Boolean {
+    val file = this.getFileByPathExt() ?: return false
+    return if (file.exists()) {
+        true
+    } else this.isFileExistsApi29Ext()
+}
+
+fun String?.isFileExistsApi29Ext(): Boolean {
+    if (Build.VERSION.SDK_INT >= 29) {
+        try {
+            val uri = Uri.parse(this)
+            val cr: ContentResolver? = getApplicationByReflect()?.contentResolver
+            val afd = cr?.openAssetFileDescriptor(uri, "r") ?: return false
+            try {
+                afd.close()
+            } catch (ignore: IOException) {
+                ignore.printStackTrace()
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            return false
+        }
+        return true
+    }
+    return false
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Rename the file.
+ */
+fun String?.renameExt(newName: String): Boolean {
+    return this.getFileByPathExt().renameExt(newName)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Rename the file.
+ */
+fun File?.renameExt(newName: String): Boolean {
+    // file is null then return false
+    if (this == null) return false
+    // file doesn't exist then return false
+    if (!this.exists()) return false
+    // the new name is space then return false
+    if (newName.isEmptyOrBlankExt()) return false
+    // the new name equals old name then return true
+    if (newName == this.name) return true
+    val newFile = File(this.parent + File.separator + newName)
+    // the new name of file exists then return false
+    return (!newFile.exists() && this.renameTo(newFile))
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether it is a directory.
+ */
+fun String?.isDirExt(): Boolean {
+    return this.getFileByPathExt().isDirExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether it is a directory.
+ */
+fun File?.isDirExt(): Boolean {
+    return this != null && this.exists() && this.isDirectory
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether it is a file.
+ */
+fun String?.isFileExt(): Boolean {
+    return this.getFileByPathExt().isFileExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return whether it is a file.
+ */
+fun File?.isFileExt(): Boolean {
+    return this != null && this.exists() && this.isFile
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Create a directory if it doesn't exist, otherwise do nothing.
+ */
+fun String?.createOrExistsDirExt(): Boolean {
+    return this.getFileByPathExt().createOrExistsDirExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Create a directory if it doesn't exist, otherwise do nothing.
+ */
+fun File?.createOrExistsDirExt(): Boolean {
+    return this != null && if (this.exists()) this.isDirectory else this.mkdirs()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Create a file if it doesn't exist, otherwise do nothing.
+ */
+fun String?.createOrExistsFileExt(filePath: String?): Boolean {
+    return this.getFileByPathExt().createOrExistsFileExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe  Create a file if it doesn't exist, otherwise do nothing.
+ */
+fun File?.createOrExistsFileExt(): Boolean {
+    if (this == null) return false
+    if (this.exists()) return this.isFile
+    return if (!this.parentFile.createOrExistsDirExt()) false else try {
+        this.createNewFile()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        false
+    }
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Create a file if it doesn't exist, otherwise delete old file before creating.
+ */
+fun String?.createFileByDeleteOldFileExt(filePath: String?): Boolean {
+    return this.getFileByPathExt().createFileByDeleteOldFileExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Create a file if it doesn't exist, otherwise delete old file before creating.
+ */
+fun File?.createFileByDeleteOldFileExt(): Boolean {
+    if (this == null) return false
+    // file exists and unsuccessfully delete then return false
+    if (this.exists() && !this.delete()) return false
+    return if (!this.parentFile.createOrExistsDirExt()) false else try {
+        this.createNewFile()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        false
+    }
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the directory.
+ */
+fun String?.deleteExt(): Boolean {
+    return this.getFileByPathExt().deleteExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the directory.
+ */
+fun File?.deleteExt(): Boolean {
+    if (this == null) return false
+    return if (this.isDirectory) {
+        this.deleteDirExt()
+    } else this.deleteFileExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the directory.
+ */
+private fun File?.deleteDirExt(): Boolean {
+    if (this == null) return false
+    // dir doesn't exist then return true
+    if (!this.exists()) return true
+    // dir isn't a directory then return false
+    if (!this.isDirectory) return false
+    val files = this.listFiles()
+    if (files != null && files.isNotEmpty()) {
+        for (file in files) {
+            if (file.isFile) {
+                if (!file.delete()) return false
+            } else if (file.isDirectory) {
+                if (!this.deleteDirExt()) return false
+            }
+        }
+    }
+    return this.delete()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the file.
+ */
+private fun File?.deleteFileExt(): Boolean {
+    return this != null && (!this.exists() || this.isFile && this.delete())
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the all in directory.
+ */
+fun String?.deleteAllInDirExt(): Boolean {
+    return this.getFileByPathExt().deleteAllInDirExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete the all in directory.
+ */
+fun File?.deleteAllInDirExt(): Boolean {
+    return this.deleteFilesInDirWithFilterExt() { true }
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete all files in directory.
+ */
+fun String?.deleteFilesInDirExt(): Boolean {
+    return this.getFileByPathExt().deleteFilesInDirExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete all files in directory.
+ */
+fun File?.deleteFilesInDirExt(): Boolean {
+    return this.deleteFilesInDirWithFilterExt() { pathname -> pathname.isFile }
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete all files that satisfy the filter in directory.
+ */
+fun deleteFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter?
+): Boolean {
+    return dirPath.getFileByPathExt().deleteFilesInDirWithFilterExt(filter)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Delete all files that satisfy the filter in directory.
+ */
+fun File?.deleteFilesInDirWithFilterExt(filter: FileFilter?): Boolean {
+    if (this == null || filter == null) return false
+    // dir doesn't exist then return true
+    if (!this.exists()) return true
+    // dir isn't a directory then return false
+    if (!this.isDirectory) return false
+    val files = this.listFiles()
+    if (files != null && files.isNotEmpty()) {
+        for (file in files) {
+            if (filter.accept(file)) {
+                if (file.isFile) {
+                    if (!file.delete()) return false
+                } else if (file.isDirectory) {
+                    if (!file.deleteDirExt()) return false
+                }
+            }
+        }
+    }
+    return true
+}
+
+/**
+ * Return the files in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dirPath The path of directory.
+ * @return the files in directory
+ */
+fun listFilesInDir(dirPath: String?): List<File?>? {
+    return listFilesInDir(dirPath, null)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dir The directory.
+ * @return the files in directory
+ */
+fun listFilesInDir(dir: File?): List<File?>? {
+    return listFilesInDir(dir, null)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dirPath    The path of directory.
+ * @param comparator The comparator to determine the order of the list.
+ * @return the files in directory
+ */
+fun listFilesInDir(dirPath: String?, comparator: Comparator<File?>?): List<File?>? {
+    return listFilesInDir(dirPath.getFileByPathExt(), false, comparator)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dir        The directory.
+ * @param comparator The comparator to determine the order of the list.
+ * @return the files in directory
+ */
+fun listFilesInDir(dir: File?, comparator: Comparator<File?>?): List<File?>? {
+    return listFilesInDir(dir, false, comparator)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * @param dirPath     The path of directory.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @return the files in directory
+ */
+fun listFilesInDir(dirPath: String?, isRecursive: Boolean): List<File?>? {
+    return listFilesInDir(dirPath.getFileByPathExt(), isRecursive)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * @param dir         The directory.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @return the files in directory
+ */
+fun listFilesInDir(dir: File?, isRecursive: Boolean): List<File?>? {
+    return listFilesInDir(dir, isRecursive, null)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * @param dirPath     The path of directory.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @param comparator  The comparator to determine the order of the list.
+ * @return the files in directory
+ */
+fun listFilesInDir(
+    dirPath: String?,
+    isRecursive: Boolean,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    return listFilesInDir(dirPath.getFileByPathExt(), isRecursive, comparator)
+}
+
+/**
+ * Return the files in directory.
+ *
+ * @param dir         The directory.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @param comparator  The comparator to determine the order of the list.
+ * @return the files in directory
+ */
+fun listFilesInDir(
+    dir: File?,
+    isRecursive: Boolean,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    return listFilesInDirWithFilter(dir, { true }, isRecursive, comparator)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dirPath The path of directory.
+ * @param filter  The filter.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter
+): List<File?>? {
+    return listFilesInDirWithFilter(dirPath.getFileByPathExt(), filter)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dir    The directory.
+ * @param filter The filter.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dir: File?,
+    filter: FileFilter
+): List<File?>? {
+    return listFilesInDirWithFilter(dir, filter, false, null)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dirPath    The path of directory.
+ * @param filter     The filter.
+ * @param comparator The comparator to determine the order of the list.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    return listFilesInDirWithFilter(dirPath.getFileByPathExt(), filter, comparator)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * Doesn't traverse subdirectories
+ *
+ * @param dir        The directory.
+ * @param filter     The filter.
+ * @param comparator The comparator to determine the order of the list.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dir: File?,
+    filter: FileFilter,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    return listFilesInDirWithFilter(dir, filter, false, comparator)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * @param dirPath     The path of directory.
+ * @param filter      The filter.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter,
+    isRecursive: Boolean
+): List<File?>? {
+    return listFilesInDirWithFilter(dirPath.getFileByPathExt(), filter, isRecursive)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * @param dir         The directory.
+ * @param filter      The filter.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dir: File?,
+    filter: FileFilter,
+    isRecursive: Boolean
+): List<File?>? {
+    return listFilesInDirWithFilter(dir, filter, isRecursive, null)
+}
+
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * @param dirPath     The path of directory.
+ * @param filter      The filter.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @param comparator  The comparator to determine the order of the list.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter,
+    isRecursive: Boolean,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    return listFilesInDirWithFilter(dirPath.getFileByPathExt(), filter, isRecursive, comparator)
+}
+
+/**
+ * Return the files that satisfy the filter in directory.
+ *
+ * @param dir         The directory.
+ * @param filter      The filter.
+ * @param isRecursive True to traverse subdirectories, false otherwise.
+ * @param comparator  The comparator to determine the order of the list.
+ * @return the files that satisfy the filter in directory
+ */
+fun listFilesInDirWithFilter(
+    dir: File?,
+    filter: FileFilter,
+    isRecursive: Boolean,
+    comparator: Comparator<File?>?
+): List<File?>? {
+    val files = listFilesInDirWithFilterInner(dir, filter, isRecursive)
+    if (comparator != null) {
+        Collections.sort(files, comparator)
+    }
+    return files
+}
+
+private fun listFilesInDirWithFilterInner(
+    dir: File?,
+    filter: FileFilter,
+    isRecursive: Boolean
+): List<File?> {
+    val list: MutableList<File?> = ArrayList()
+    if (!dir.isDirExt()) return list
+    val files = dir!!.listFiles()
+    if (files != null && files.isNotEmpty()) {
+        for (file in files) {
+            if (filter.accept(file)) {
+                list.add(file)
+            }
+            if (isRecursive && file.isDirectory) {
+                list.addAll(listFilesInDirWithFilterInner(file, filter, true))
+            }
+        }
+    }
+    return list
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the time that the file was last modified.
+ */
+fun String?.getFileLastModifiedExt(): Long {
+    return this.getFileByPathExt().getFileLastModifiedExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the time that the file was last modified.
+ */
+fun File?.getFileLastModifiedExt(): Long {
+    return this?.lastModified() ?: -1
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the number of lines of file.
+ */
+fun String?.getFileLinesExt(): Int {
+    return this.getFileByPathExt().getFileLinesExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the number of lines of file.
+ */
+fun File?.getFileLinesExt(): Int {
+    var count = 1
+    var inputStream: InputStream? = null
+    try {
+        inputStream = BufferedInputStream(FileInputStream(this))
+        val buffer = ByteArray(1024)
+        var readChars: Int
+        if (LINE_SEP.endsWith("\n")) {
+            while (inputStream.read(buffer, 0, 1024).also { readChars = it } != -1) {
+                for (i in 0 until readChars) {
+                    if (buffer[i].toChar() == '\n') ++count
+                }
+            }
+        } else {
+            while (inputStream.read(buffer, 0, 1024).also { readChars = it } != -1) {
+                for (i in 0 until readChars) {
+                    if (buffer[i].toChar() == '\r') ++count
+                }
+            }
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } finally {
+        try {
+            inputStream?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    return count
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the size.
+ */
+fun String?.getSizeExt(): String? {
+    return this.getFileByPathExt().getSizeExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the size.
+ */
+fun File?.getSizeExt(): String? {
+    if (this == null) return ""
+    return if (this.isDirectory) {
+        this.getDirSizeExt()
+    } else this.getFileSizeExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the size of directory.
+ */
+fun File.getDirSizeExt(): String? {
+    val len = this.getDirLengthExt()
+    return if (len == -1L) "" else byte2FitMemorySize(len)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the size of file.
+ */
+fun File.getFileSizeExt(): String? {
+    val len: Long = this.getFileLengthExt()
+    return if (len == -1L) "" else byte2FitMemorySize(len)
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the length.
+ */
+fun String?.getLengthExt(): Long {
+    return this.getFileByPathExt().getLengthExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the length.
+ */
+fun File?.getLengthExt(): Long {
+    if (this == null) return 0
+    return if (this.isDirectory) {
+        this.getDirLengthExt()
+    } else this.getFileLengthExt()
+}
+
+/**
+ *  @author: long
+ *  @email spielberggao@gmail.com
+ *  @describe Return the length of directory.
+ */
+fun File.getDirLengthExt(): Long {
+    if (!this.isDirExt()) return 0
+    var len: Long = 0
+    val files = this.listFiles()
+    if (files != null && files.isNotEmpty()) {
+        for (file in files) {
+            len += if (file.isDirectory) {
+                file.getDirLengthExt()
+            } else {
+                file.length()
+            }
+        }
+    }
+    return len
+}
+
+
 
 
