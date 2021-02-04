@@ -1,7 +1,7 @@
+
 package com.spielberg.commonext
 
 import android.annotation.SuppressLint
-import androidx.annotation.NonNull
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -20,7 +20,7 @@ private fun getDefaultFormat(): SimpleDateFormat {
 
 @SuppressLint("SimpleDateFormat")
 fun getSafeDateFormat(pattern: String): SimpleDateFormat {
-    val sdfMap: MutableMap<String, SimpleDateFormat> = SDF_THREAD_LOCAL.get()
+    val sdfMap: MutableMap<String, SimpleDateFormat> = SDF_THREAD_LOCAL.get()!!
     var simpleDateFormat = sdfMap[pattern]
     if (simpleDateFormat == null) {
         simpleDateFormat = SimpleDateFormat(pattern)
