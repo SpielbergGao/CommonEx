@@ -2,12 +2,16 @@ package com.spielberg.commonext
 
 import android.annotation.SuppressLint
 import com.spielberg.commonext.constant.MemoryConstants
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 
 private val HEX_DIGITS_UPPER =
     charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
 private val HEX_DIGITS_LOWER =
     charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
+
+private const val BUFFER_SIZE = 8192
 
 
 /**
@@ -89,6 +93,41 @@ fun byte2FitMemorySize(byteSize: Long, precision: Int): String? {
                 "%." + precision + "fGB",
                 byteSize.toDouble() / MemoryConstants.GB
             )
+        }
+    }
+}
+
+/**
+ * Input stream to bytes.
+ */
+fun InputStream?.inputStream2BytesExt(): ByteArray? {
+    return this?.input2OutputStreamExt()?.toByteArray()
+}
+
+
+/**
+ * Input stream to output stream.
+ */
+fun InputStream?.input2OutputStreamExt(): ByteArrayOutputStream? {
+    if (this == null) return null
+    try {
+        val os = ByteArrayOutputStream()
+        val b = ByteArray(BUFFER_SIZE)
+        var len: Int
+        while ((this.read(b, 0, BUFFER_SIZE)
+                .also { len = it }) != -1
+        ) {
+            os.write(b, 0, len)
+        }
+        return os
+    } catch (e: java.io.IOException) {
+        e.printStackTrace()
+        return null
+    } finally {
+        try {
+            this.close()
+        } catch (e: java.io.IOException) {
+            e.printStackTrace()
         }
     }
 }
