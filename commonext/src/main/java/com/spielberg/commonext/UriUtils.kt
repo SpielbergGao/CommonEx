@@ -12,6 +12,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import androidx.annotation.RequiresApi
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -56,10 +57,10 @@ fun File?.file2UriExt(): Uri? {
  * @param uri The uri.
  * @return file
  */
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun Uri?.uri2FileExt(): File? {
     if (this == null) return null
-    val file = uri2FileReal(this)
-    return if (file != null) file else copyUri2Cache(this)
+    return uri2FileReal(this) ?: copyUri2Cache(this)
 }
 
 /**
@@ -68,6 +69,7 @@ fun Uri?.uri2FileExt(): File? {
  * @param uri The uri.
  * @return file
  */
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun uri2FileReal(uri: Uri): File? {
     Log.d("UriUtils", uri.toString())
     val authority = uri.authority
