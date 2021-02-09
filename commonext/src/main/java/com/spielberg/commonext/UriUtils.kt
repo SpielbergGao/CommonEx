@@ -30,9 +30,8 @@ import androidx.core.content.FileProvider
  * @return uri
  */
 fun String.res2UriExt(): Uri? {
-    return Uri.parse(
-        "android.resource://" + getApplicationByReflect()?.packageName.toString() + "/" + this
-    )
+    val uri = "android.resource://${getApplicationByReflect()?.packageName}/${this}"
+    return Uri.parse(uri)
 }
 
 /**
@@ -194,6 +193,7 @@ fun uri2FileReal(uri: Uri): File? {
                         }
                     }
                 } catch (ex: Exception) {
+                    ex.printStackTrace()
                     Log.d("UriUtils", "$uri parse failed. $ex -> 1_0")
                 }
             }
@@ -231,6 +231,7 @@ fun uri2FileReal(uri: Uri): File? {
                         return file
                     }
                 } catch (ignore: Exception) {
+                    ignore.printStackTrace()
                 }
             }
             Log.d("UriUtils", "$uri parse failed. -> 1_1")
