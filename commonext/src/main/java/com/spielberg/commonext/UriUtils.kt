@@ -17,7 +17,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-
+import androidx.core.content.FileProvider
 
 /**
  * Resource to uri.
@@ -42,10 +42,12 @@ fun String.res2UriExt(): Uri? {
  * @return uri
  */
 fun File?.file2UriExt(): Uri? {
+    if (this == null) return null
     if (!this.isFileExists()) return null
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        val authority: String = "${getApplicationByReflect()?.packageName}.utilcode.provider"
-        return FileProvider.getUriForFile(getApplicationByReflect(), authority, this)
+        val authority = "${getApplicationByReflect()?.packageName}.utilcode.provider"
+        val context = getApplicationByReflect()?.baseContext ?: return null
+        return FileProvider.getUriForFile(context, authority, this)
     } else {
         return Uri.fromFile(this)
     }
