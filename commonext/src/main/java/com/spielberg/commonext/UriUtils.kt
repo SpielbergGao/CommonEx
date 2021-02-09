@@ -152,7 +152,8 @@ fun uri2FileReal(uri: Uri): File? {
             val split = docId.split(":".toRegex()).toTypedArray()
             val type = split[0]
             if ("primary".equals(type, ignoreCase = true)) {
-                return File(Environment.getExternalStorageDirectory().toString() + "/" + split[1])
+                val pathname = "${Environment.getExternalStorageDirectory()}/${split[1]}"
+                return File(pathname)
             } else {
                 // Below logic is how External Storage provider build URI for documents
                 // http://stackoverflow.com/questions/28605278/android-5-sd-card-label
@@ -185,11 +186,10 @@ fun uri2FileReal(uri: Uri): File? {
                         ) {
                             continue
                         }
-                        val uuid: String? = getUuid.invoke(storageVolumeElement) as String
+                        val uuid: String? = getUuid.invoke(storageVolumeElement) as? String
                         if (uuid != null && (uuid == type)) {
-                            return File(
-                                getPath.invoke(storageVolumeElement).toString() + "/" + split[1]
-                            )
+                            val pathname = "${getPath.invoke(storageVolumeElement)}/${split[1]}"
+                            return File(pathname)
                         }
                     }
                 } catch (ex: Exception) {
@@ -285,18 +285,18 @@ fun getFileFromUri(
 ): File? {
     if (("com.google.android.apps.photos.content" == uri.authority)) {
         if (!uri.lastPathSegment.isEmptyOrBlankExt()) {
-            return File(uri.lastPathSegment)
+            return File(uri.lastPathSegment!!)
         }
     } else if (("com.tencent.mtt.fileprovider" == uri.authority)) {
-        val path = uri.path
+        val path = uri.path ?: return null
         if (!TextUtils.isEmpty(path)) {
             val fileDir = Environment.getExternalStorageDirectory()
-            return File(fileDir, path!!.substring("/QQBrowser".length, path.length))
+            return File(fileDir, path.substring("/QQBrowser".length, path.length))
         }
     } else if (("com.huawei.hidisk.fileprovider" == uri.authority)) {
-        val path = uri.path
+        val path = uri.path?: return null
         if (!TextUtils.isEmpty(path)) {
-            return File(path!!.replace("/root", ""))
+            return File(path.replace("/root", ""))
         }
     }
     val cursor: Cursor? = getApplicationByReflect()?.contentResolver?.query(
