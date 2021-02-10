@@ -1,11 +1,10 @@
-package com.spielberg
+package com.spielberg.commonext
 
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
-import com.spielberg.commonext.getApplicationByReflect
 import java.util.*
 
 /**
