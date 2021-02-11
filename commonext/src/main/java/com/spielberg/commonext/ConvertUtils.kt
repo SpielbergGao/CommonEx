@@ -2,8 +2,9 @@ package com.spielberg.commonext
 
 import android.annotation.SuppressLint
 import com.spielberg.commonext.constant.MemoryConstants
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
+import java.io.*
+import java.nio.charset.Charset
+import java.util.*
 
 
 private val HEX_DIGITS_UPPER =
@@ -120,14 +121,52 @@ fun InputStream?.input2OutputStreamExt(): ByteArrayOutputStream? {
             os.write(b, 0, len)
         }
         return os
-    } catch (e: java.io.IOException) {
+    } catch (e: IOException) {
         e.printStackTrace()
         return null
     } finally {
         try {
             this.close()
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
+}
+
+fun inputStream2Lines(
+    inputStream: InputStream?,
+    charsetName: String?
+): List<String>? {
+    var reader: BufferedReader? = null
+    return try {
+        val list: MutableList<String> = ArrayList()
+        reader = BufferedReader(
+            InputStreamReader(
+                inputStream,
+                getSafeCharset(charsetName)
+            )
+        )
+        var line: String
+        while (reader.readLine().also { line = it } != null) {
+            list.add(line)
+        }
+        list
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    } finally {
+        try {
+            reader?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+}
+
+private fun getSafeCharset(charsetName: String?): String? {
+    var cn = charsetName
+    if (charsetName.isEmptyOrBlankExt() || !Charset.isSupported(charsetName)) {
+        cn = "UTF-8"
+    }
+    return cn
 }

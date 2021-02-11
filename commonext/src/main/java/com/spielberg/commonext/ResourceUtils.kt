@@ -146,7 +146,7 @@ fun copyFileFromAssets(assetsFilePath: String, destFilePath: String): Boolean {
                 res = res and copyFileFromAssets("$assetsFilePath/$asset", "$destFilePath/$asset")
             }
         } else {
-            res = UtilsBridge.writeFileFromIS(
+            res = writeFileFromIS(
                 destFilePath,
                 getApplicationByReflect()?.assets?.open(assetsFilePath)
             )
@@ -179,12 +179,12 @@ fun readAssets2String(assetsFilePath: String?, charsetName: String?): String? {
     if (assetsFilePath.isEmptyOrBlankExt()) return ""
     return try {
         val inputStream: InputStream? = getApplicationByReflect()?.assets?.open(assetsFilePath!!)
-        val bytes: ByteArray = UtilsBridge.inputStream2Bytes(inputStream) ?: return ""
+        val bytes: ByteArray = inputStream?.inputStream2BytesExt() ?: return ""
         if (charsetName.isEmptyOrBlankExt()) {
             String(bytes)
         } else {
             try {
-                String(bytes, charsetName)
+                java.lang.String(bytes, charsetName!!) as String
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
                 ""
@@ -219,7 +219,7 @@ fun readAssets2List(
 ): List<String?>? {
     if (assetsPath.isEmptyOrBlankExt())return emptyList()
     return try {
-        UtilsBridge.inputStream2Lines(
+       inputStream2Lines(
             getApplicationByReflect()?.resources?.assets?.open(assetsPath!!),
             charsetName
         )
@@ -238,7 +238,7 @@ fun readAssets2List(
  * @return `true`: success<br></br>`false`: fail
  */
 fun copyFileFromRaw(@RawRes resId: Int, destFilePath: String?): Boolean {
-    return UtilsBridge.writeFileFromIS(
+    return writeFileFromIS(
         destFilePath,
         getApplicationByReflect()?.resources?.openRawResource(resId)
     )
@@ -268,7 +268,7 @@ fun readRaw2String(@RawRes resId: Int, charsetName: String?): String? {
         String(bytes)
     } else {
         try {
-            String(bytes, charsetName.toCharset())
+            java.lang.String(bytes, charsetName!!) as String
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
             ""
@@ -297,7 +297,7 @@ fun readRaw2List(
     @RawRes resId: Int,
     charsetName: String?
 ): List<String?>? {
-    return UtilsBridge.inputStream2Lines(
+    return inputStream2Lines(
         getApplicationByReflect()?.resources?.openRawResource(resId),
         charsetName
     )
