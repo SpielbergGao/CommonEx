@@ -46,7 +46,7 @@ fun getGson(key: String): Gson? {
     return GSONS[key]
 }
 
-fun getGson(): Gson? {
+fun getGson(): Gson {
     val gsonDelegate: Gson? = GSONS[KEY_DELEGATE]
     if (gsonDelegate != null) {
         return gsonDelegate
@@ -54,7 +54,7 @@ fun getGson(): Gson? {
     var gsonDefault: Gson? = GSONS[KEY_DEFAULT]
     if (gsonDefault == null) {
         gsonDefault = createGson()
-        GSONS[KEY_DEFAULT] = gsonDefault
+        GSONS[KEY_DEFAULT] = gsonDefault!!
     }
     return gsonDefault
 }
@@ -244,7 +244,7 @@ fun getArrayType(type: Type): Type? {
  * @return the type of map with the `type`
  */
 fun getType(rawType: Type, vararg typeArguments: Type): Type? {
-    return TypeToken.getParameterized(rawType, typeArguments).getType()
+    return TypeToken.getParameterized(rawType, *typeArguments).type
 }
 
 fun getGson4LogUtils(): Gson? {
