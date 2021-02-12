@@ -1,6 +1,22 @@
 
 ## 持续配置中
 
+引入方式
+
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+```
+	dependencies {
+	        implementation 'com.github.SpielbergGao:CommonEx:v1.0.1'
+	}
+```
 
 
 
