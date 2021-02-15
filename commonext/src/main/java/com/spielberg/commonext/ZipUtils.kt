@@ -1,10 +1,6 @@
-package com.spielberg.commonext.constant
+package com.spielberg.commonext
 
 import android.util.Log
-import com.spielberg.commonext.createOrExistsDirExt
-import com.spielberg.commonext.createOrExistsFileExt
-import com.spielberg.commonext.getFileByPathExt
-import com.spielberg.commonext.isEmptyOrBlankExt
 import java.io.*
 import java.util.*
 import java.util.zip.ZipEntry

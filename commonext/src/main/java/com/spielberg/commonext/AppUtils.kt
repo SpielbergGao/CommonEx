@@ -89,10 +89,10 @@ fun String?.isAppInstalled(): Boolean {
  *
  * @return `true`: yes<br></br>`false`: no
  */
-fun isAppRoot(): Boolean {
-    val result = execCmd("echo root", true) ?: return false
-    return result!!.result === 0
-}
+//fun isAppRoot(): Boolean {
+//    val result = execCmd("echo root", true) ?: return false
+//    return result!!.result === 0
+//}
 
 /**
  * Return whether it is a debug application.
@@ -147,9 +147,9 @@ fun String?.isAppSystem(): Boolean {
  *
  * @return `true`: yes<br></br>`false`: no
  */
-fun isAppForeground(): Boolean {
-    return UtilsBridge.isAppForeground()
-}
+//fun isAppForeground(): Boolean {
+//    return UtilsBridge.isAppForeground()
+//}
 
 /**
  * Return whether application is foreground.
@@ -288,10 +288,10 @@ fun launchAppDetailsSettings(activity: Activity?, requestCode: Int, pkgName: Str
 /**
  * Exit the application.
  */
-fun exitApp() {
-    finishAllActivities()
-    System.exit(0)
-}
+//fun exitApp() {
+//    finishAllActivities()
+//    System.exit(0)
+//}
 
 /**
  * Return the application's icon.
@@ -616,7 +616,7 @@ private fun getAppSignaturesHash(packageName: String, algorithm: String): List<S
     val signatures = packageName.getAppSignatures()
     if (signatures == null || signatures.isEmpty()) return result
     for (signature: Signature in signatures) {
-        val hash: String = hashTemplate(signature.toByteArray(), algorithm).bytes2HexStringExt()?.replaceAll(
+        val hash: String? = hashTemplate(signature.toByteArray(), algorithm).bytes2HexStringExt()?.replace(
             "(?<=[0-9A-F]{2})[0-9A-F]{2}",
             ":$0"
         )
