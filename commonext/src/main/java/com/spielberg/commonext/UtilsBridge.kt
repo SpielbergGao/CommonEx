@@ -1,5 +1,6 @@
 package com.spielberg.commonext
 
+import android.content.Intent
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -19,4 +20,20 @@ fun hashTemplate(data: ByteArray?, algorithm: String?): ByteArray? {
         e.printStackTrace()
         null
     }
+}
+
+fun getLaunchAppDetailsSettingsIntent(pkgName: String?, isNewTask: Boolean): Intent? {
+    return getLaunchAppDetailsSettingsIntent(pkgName, isNewTask)
+}
+
+fun isIntentAvailable(intent: Intent?): Boolean {
+    return isIntentAvailable(intent)
+}
+
+fun getLaunchAppIntent(pkgName: String?): Intent? {
+    return getLaunchAppIntent(pkgName)
+}
+
+fun getForegroundProcessName(): String? {
+    return getForegroundProcessName()
 }
