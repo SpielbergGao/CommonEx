@@ -4,7 +4,7 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.FloatRange
-import androidx.annotation.NonNull
+import androidx.annotation.IntRange
 import androidx.core.content.ContextCompat
 
 /**
@@ -27,7 +27,7 @@ fun getColor(@ColorRes id: Int): Int {
  */
 fun setAlphaComponent(
     @ColorInt color: Int,
-    @androidx.annotation.IntRange(from = 0x0, to = 0xFF) alpha: Int
+    @IntRange(from = 0x0, to = 0xFF) alpha: Int
 ): Int {
     return color and 0x00ffffff or (alpha shl 24)
 }
@@ -55,7 +55,7 @@ fun setAlphaComponent(
  */
 fun setRedComponent(
     @ColorInt color: Int,
-    @androidx.annotation.IntRange(from = 0x0, to = 0xFF) red: Int
+    @IntRange(from = 0x0, to = 0xFF) red: Int
 ): Int {
     return color and -0xff0001 or (red shl 16)
 }
@@ -83,7 +83,7 @@ fun setRedComponent(
  */
 fun setGreenComponent(
     @ColorInt color: Int,
-    @androidx.annotation.IntRange(from = 0x0, to = 0xFF) green: Int
+    @IntRange(from = 0x0, to = 0xFF) green: Int
 ): Int {
     return color and -0xff01 or (green shl 8)
 }
@@ -111,7 +111,7 @@ fun setGreenComponent(
  */
 fun setBlueComponent(
     @ColorInt color: Int,
-    @androidx.annotation.IntRange(from = 0x0, to = 0xFF) blue: Int
+    @IntRange(from = 0x0, to = 0xFF) blue: Int
 ): Int {
     return color and -0x100 or blue
 }
@@ -153,7 +153,7 @@ fun setBlueComponent(
  * @return color-int
  * @throws IllegalArgumentException The string cannot be parsed.
  */
-fun string2Int(@NonNull colorString: String?): Int {
+fun string2Int(colorString: String): Int {
     return Color.parseColor(colorString)
 }
 
