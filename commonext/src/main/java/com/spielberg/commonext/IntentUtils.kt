@@ -55,14 +55,13 @@ fun String?.getInstallAppIntent(): Intent? {
 fun File?.getInstallAppIntent(): Intent? {
     if (!this.isFileExists()) return null
     val context = getApplicationByReflect() ?: return null
-    val uri: Uri
-    uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+    val uri: Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
         Uri.fromFile(this)
     } else {
         val authority = "${context.packageName}.utilcode.provider"
         FileProvider.getUriForFile(context, authority, this!!)
     }
-    return uri?.getInstallAppIntent()
+    return uri.getInstallAppIntent()
 }
 
 /**
@@ -384,8 +383,7 @@ fun getComponentIntent(
  * @return the intent of shutdown
  */
 fun getShutdownIntent(): Intent? {
-    val intent: Intent
-    intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         Intent(Intent.ACTION_SHUTDOWN)
     } else {
         Intent("com.android.internal.intent.action.REQUEST_SHUTDOWN")
