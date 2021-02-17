@@ -10,6 +10,7 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.IntDef
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -24,7 +25,14 @@ const val IMPORTANCE_LOW = 2
 const val IMPORTANCE_DEFAULT = 3
 const val IMPORTANCE_HIGH = 4
 
-@IntDef(IMPORTANCE_UNSPECIFIED, IMPORTANCE_NONE, IMPORTANCE_MIN, IMPORTANCE_LOW, IMPORTANCE_DEFAULT, IMPORTANCE_HIGH)
+@IntDef(
+    IMPORTANCE_UNSPECIFIED,
+    IMPORTANCE_NONE,
+    IMPORTANCE_MIN,
+    IMPORTANCE_LOW,
+    IMPORTANCE_DEFAULT,
+    IMPORTANCE_HIGH
+)
 @Retention(
     RetentionPolicy.SOURCE
 )
@@ -46,6 +54,7 @@ fun areNotificationsEnabled(): Boolean {
  * @param id       An identifier for this notification.
  * @param consumer The consumer of create the builder of notification.
  */
+@RequiresApi(Build.VERSION_CODES.N)
 fun notify(id: Int, consumer: Consumer<NotificationCompat.Builder>) {
     notify(null, id, ChannelConfig.DEFAULT_CHANNEL_CONFIG, consumer)
 }
@@ -57,6 +66,7 @@ fun notify(id: Int, consumer: Consumer<NotificationCompat.Builder>) {
  * @param id       An identifier for this notification.
  * @param consumer The consumer of create the builder of notification.
  */
+@RequiresApi(Build.VERSION_CODES.N)
 fun notify(tag: String?, id: Int, consumer: Consumer<NotificationCompat.Builder>) {
     notify(tag, id, ChannelConfig.DEFAULT_CHANNEL_CONFIG, consumer)
 }
@@ -68,6 +78,7 @@ fun notify(tag: String?, id: Int, consumer: Consumer<NotificationCompat.Builder>
  * @param channelConfig The notification channel of config.
  * @param consumer      The consumer of create the builder of notification.
  */
+@RequiresApi(Build.VERSION_CODES.N)
 fun notify(
     id: Int,
     channelConfig: ChannelConfig,
@@ -84,34 +95,33 @@ fun notify(
  * @param channelConfig The notification channel of config.
  * @param consumer      The consumer of create the builder of notification.
  */
+@RequiresApi(Build.VERSION_CODES.N)
 fun notify(
     tag: String?,
     id: Int,
     channelConfig: ChannelConfig,
     consumer: Consumer<NotificationCompat.Builder>
 ) {
-    val context = getApplicationByReflect()?:return
+    val context = getApplicationByReflect() ?: return
     NotificationManagerCompat.from(context)
         .notify(tag, id, getNotification(channelConfig, consumer))
 }
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 fun getNotification(
     channelConfig: ChannelConfig,
     consumer: Consumer<NotificationCompat.Builder>
 ): Notification {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val nm =
-            getApplicationByReflect()?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        val nm = getApplicationByReflect()?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         nm?.createNotificationChannel(channelConfig.notificationChannel!!)
     }
     val builder: NotificationCompat.Builder = NotificationCompat.Builder(getApplicationByReflect())
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         builder.setChannelId(channelConfig.notificationChannel!!.id)
     }
-    if (consumer != null) {
-        consumer.accept(builder)
-    }
+    consumer.accept(builder)
     return builder.build()
 }
 
@@ -122,7 +132,7 @@ fun getNotification(
  * @param id  The identifier for the notification will be cancelled.
  */
 fun cancel(tag: String?, id: Int) {
-    val context = getApplicationByReflect()?:return
+    val context = getApplicationByReflect() ?: return
     NotificationManagerCompat.from(context).cancel(tag, id)
 }
 
@@ -132,7 +142,7 @@ fun cancel(tag: String?, id: Int) {
  * @param id The identifier for the notification will be cancelled.
  */
 fun cancel(id: Int) {
-    val context = getApplicationByReflect()?:return
+    val context = getApplicationByReflect() ?: return
     NotificationManagerCompat.from(context).cancel(id)
 }
 
@@ -140,7 +150,7 @@ fun cancel(id: Int) {
  * Cancel all of the notifications.
  */
 fun cancelAll() {
-    val context = getApplicationByReflect()?:return
+    val context = getApplicationByReflect() ?: return
     NotificationManagerCompat.from(context).cancelAll()
 }
 
@@ -337,7 +347,9 @@ class ChannelConfig(id: String?, name: CharSequence?, @Importance importance: In
 
     companion object {
         val DEFAULT_CHANNEL_CONFIG = ChannelConfig(
-            getApplicationByReflect()?.packageName, getApplicationByReflect()?.packageName, IMPORTANCE_DEFAULT
+            getApplicationByReflect()?.packageName,
+            getApplicationByReflect()?.packageName,
+            IMPORTANCE_DEFAULT
         )
     }
 
