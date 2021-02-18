@@ -6,13 +6,7 @@ import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import com.spielberg.commonext.handlers.LifecycleHandler
-
-/**
- * Description: Activity相关
- * Create by lxj, at 2018/12/7
- */
 
 inline fun <reified T> Fragment.start(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null) {
     val intent = Intent(activity, T::class.java).apply {
@@ -77,6 +71,3 @@ fun FragmentActivity.post(action: ()->Unit){
 fun FragmentActivity.postDelay(delay:Long = 0, action: ()->Unit){
     LifecycleHandler(this).postDelayed({ action() }, delay)
 }
-
-//view model
-fun <T: ViewModel> FragmentActivity.getVM(clazz: Class<T>) = ViewModelProviders.of(this).get(clazz)
