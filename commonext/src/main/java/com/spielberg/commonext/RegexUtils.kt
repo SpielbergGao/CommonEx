@@ -102,7 +102,7 @@ fun isIDCard18Exact(input: CharSequence): Boolean {
     if (isIDCard18(input)) {
         val factor = intArrayOf(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2)
         val suffix = charArrayOf('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2')
-        if (CITY_MAP.isEmpty()) {
+        if (CITY_MAP.isEmpty) {
             CITY_MAP.put("11", "北京")
             CITY_MAP.put("12", "天津")
             CITY_MAP.put("13", "河北")
@@ -226,8 +226,8 @@ fun isIP(input: CharSequence?): Boolean {
  * @param input The input.
  * @return `true`: yes<br></br>`false`: no
  */
-fun isMatch(regex: String?, input: CharSequence?): Boolean {
-    return input != null && input.length > 0 && Pattern.matches(regex, input)
+fun isMatch(regex: String, input: CharSequence?): Boolean {
+    return input != null && input.isNotEmpty() && Pattern.matches(regex, input)
 }
 
 /**
@@ -237,7 +237,7 @@ fun isMatch(regex: String?, input: CharSequence?): Boolean {
  * @param input The input.
  * @return the list of input matches the regex
  */
-fun getMatches(regex: String?, input: CharSequence?): List<String>? {
+fun getMatches(regex: String, input: CharSequence?): List<String>? {
     if (input == null) return emptyList()
     val matches: MutableList<String> = ArrayList()
     val pattern = Pattern.compile(regex)
