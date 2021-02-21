@@ -198,7 +198,7 @@ fun String?.createFileExt(): File? {
     if (this.isEmptyOrBlankExt()) {
         return null
     }
-    val f = File(this)
+    val f = File(this!!)
     if (f.parentFile != null && !f.parentFile!!.exists()) { // 如果不存在上级文件夹
         f.parentFile!!.mkdirs()
     }
@@ -220,7 +220,7 @@ fun String?.createFileExt(): File? {
  *  @describe Return the file by path.
  */
 fun String?.getFileByPathExt(): File? {
-    return if (this.isEmptyOrBlankExt()) null else File(this)
+    return if (this.isEmptyOrBlankExt()) null else File(this!!)
 }
 
 /**
