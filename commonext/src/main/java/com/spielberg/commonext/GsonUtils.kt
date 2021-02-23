@@ -247,13 +247,13 @@ fun getType(rawType: Type, vararg typeArguments: Type): Type? {
     return TypeToken.getParameterized(rawType, *typeArguments).type
 }
 
-fun getGson4LogUtils(): Gson? {
+fun getGson4LogUtils(): Gson {
     var gson4LogUtils: Gson? = GSONS[KEY_LOG_UTILS]
     if (gson4LogUtils == null) {
         gson4LogUtils = GsonBuilder().setPrettyPrinting().serializeNulls().create()
         GSONS[KEY_LOG_UTILS] = gson4LogUtils
     }
-    return gson4LogUtils
+    return gson4LogUtils!!
 }
 
 private fun createGson(): Gson? {
