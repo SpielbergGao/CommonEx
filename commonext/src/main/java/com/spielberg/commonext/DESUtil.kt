@@ -1,11 +1,11 @@
 package com.spielberg.commonext
 
-import android.text.TextUtils
 import android.util.Base64
-import java.security.Key
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import java.security.SecureRandom
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.security.*
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
@@ -104,7 +104,7 @@ fun String?.md5(): String? {
         val bytes: ByteArray = md5.digest(this!!.toByteArray())
         var result = ""
         for (b in bytes) {
-            var temp = Integer.toHexString(b.toInt() and 0xff)
+            var temp = Integer.toHexString((b.toInt() and 0xff))
             if (temp.length == 1) {
                 temp = "0$temp"
             }
@@ -116,3 +116,40 @@ fun String?.md5(): String? {
     }
     return ""
 }
+
+fun File?.md5(): String? {
+    if (this == null) return null
+    val buffersize = 1024
+    val fis: FileInputStream?
+    val dis: DigestInputStream?
+    try {
+        //创建MD5转换器和文件流
+        var messageDigest = MessageDigest.getInstance("MD5")
+        fis = FileInputStream(this)
+        dis = DigestInputStream(fis, messageDigest)
+        val buffer = ByteArray(buffersize)
+        //DigestInputStream实际上在流处理文件时就在内部就进行了一定的处理
+        while (dis.read(buffer) > 0);
+        //通过DigestInputStream对象得到一个最终的MessageDigest对象。
+        messageDigest = dis.messageDigest
+        // 通过messageDigest拿到结果，也是字节数组，包含16个元素
+        val array = messageDigest.digest()
+        // 同样，把字节数组转换成字符串
+        val hex = java.lang.StringBuilder(array.size * 2)
+        for (b in array) {
+            if (b.toInt() and 0xFF < 0x10) {
+                hex.append("0")
+            }
+            hex.append(Integer.toHexString((b.toInt() and 0xFF)))
+        }
+        return hex.toString()
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    } catch (e: NoSuchAlgorithmException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return null
+}
+
