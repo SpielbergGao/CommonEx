@@ -1,13 +1,17 @@
 package com.spielberg.commonext
 
+import android.text.TextUtils
 import android.util.Base64
-import java.lang.StringBuilder
 import java.security.Key
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
+import kotlin.experimental.and
+
 
 //算法名称
 const val KEY_ALGORITHM = "DES"
@@ -88,4 +92,27 @@ fun decrypt(data: String?, key: String): String? {
     // 解密字节16进制查看
     // hexStringView(bytes);
     return String(bytes)
+}
+
+fun String?.md5(): String? {
+    if (this.isEmptyOrBlankExt()) {
+        return ""
+    }
+    val md5: MessageDigest?
+    try {
+        md5 = MessageDigest.getInstance("MD5")
+        val bytes: ByteArray = md5.digest(this!!.toByteArray())
+        var result = ""
+        for (b in bytes) {
+            var temp = Integer.toHexString(b.toInt() and 0xff)
+            if (temp.length == 1) {
+                temp = "0$temp"
+            }
+            result += temp
+        }
+        return result.toUpperCase()
+    } catch (e: NoSuchAlgorithmException) {
+        e.printStackTrace()
+    }
+    return ""
 }
