@@ -1,6 +1,9 @@
 package com.spielberg.commonext
 
 import android.app.Application
+import android.content.Context
+import android.provider.Settings
+import android.text.TextUtils
 
 fun getApplicationByReflect(): Application? {
     val thread: Any? = getActivityThread()
@@ -23,4 +26,21 @@ private fun getActivityThreadInActivityThreadStaticField(): Any? {
 private fun getActivityThreadInActivityThreadStaticMethod(): Any? {
     return "android.app.ActivityThread".getClassInvokeMethodExt("currentActivityThread")
         ?.invoke(null)
+}
+
+fun Context.checkAccessibilityServiceEnabled(serviceName: String): Boolean {
+    val settingValue =
+        Settings.Secure.getString(
+            applicationContext.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+    var result = false
+    val splitter = TextUtils.SimpleStringSplitter(':')
+    while (splitter.hasNext()) {
+        if (splitter.next().equals(serviceName, true)) {
+            result = true
+            break
+        }
+    }
+    return result
 }
