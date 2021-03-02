@@ -299,3 +299,42 @@ fun View.clickNoRepeat(interval: Long = 500, action: (view: View) -> Unit) {
         action(it)
     }
 }
+
+fun View.getViewLocationArr(): IntArray {
+    val viewLoc = intArrayOf(0, 0)
+    getLocationOnScreen(viewLoc)
+    return viewLoc
+}
+
+fun View.hasLeftSpace(popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArr()
+    if (viewLoc[0] <= popupContentView.measuredWidth) {
+        return false
+    }
+    return true
+}
+
+fun View.hasRightSpace(mCtx: Context,  popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArr()
+    if (mCtx.getScreenWidthExt() - viewLoc[0] - width <= popupContentView.measuredWidth) {
+        return false
+    }
+    return true
+}
+
+fun View.hasTopSpace(popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArr()
+    if (viewLoc[1] <= popupContentView.measuredHeight) {
+        return false
+    }
+    return true
+}
+
+fun View.hasBottomSpace(mCtx: Context,  popupContentView: View): Boolean {
+    val viewLoc = getViewLocationArr()
+    if (mCtx.getScreenHeightExt() - viewLoc[1] - height <= popupContentView.measuredHeight) {
+        return false
+    }
+    return true
+}
+
