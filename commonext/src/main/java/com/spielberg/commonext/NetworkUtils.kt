@@ -16,8 +16,8 @@ import androidx.annotation.RequiresPermission
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
 fun getNetworkInfo(context: Context): NetworkInfo? {
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    return cm.activeNetworkInfo
+    val cm = context.connectivityManager
+    return cm?.activeNetworkInfo
 }
 
 /**
