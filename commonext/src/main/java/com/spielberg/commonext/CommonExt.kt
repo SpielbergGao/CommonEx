@@ -2,11 +2,11 @@ package com.spielberg.commonext
 
 import android.content.ClipData
 import android.content.Context
-import android.provider.Settings
 import android.text.Html
 import android.text.Spanned
-import android.text.TextUtils
 import android.view.View
+import java.io.File
+import java.io.IOException
 
 
 /**
@@ -65,4 +65,19 @@ fun String.toHtml(flag: Int = Html.FROM_HTML_MODE_LEGACY): Spanned {
     }
 }
 
+/**
+ * Save the response as a binary file i.e html file.
+ *
+ * @param context  the context
+ * @param filename the filename
+ * @param response the response
+ * @throws IOException the io exception
+ */
+@Throws(IOException::class)
+fun saveBinaryFileFromResponse(context: Context, filename: String?, response: Response) {
+    val downloadedFile = File(context.cacheDir, filename)
+    val sink: BufferedSink = Okio.buffer(Okio.sink(downloadedFile))
+    sink.writeAll(response.body().source())
+    sink.close()
+}
 
