@@ -81,3 +81,17 @@ fun saveBinaryFileFromResponse(context: Context, filename: String?, response: Re
     sink.close()
 }
 
+fun <T> MutableList<T>.onDuplication(data: List<T>?) {
+    data?.forEach { new ->
+        val has = this.find { old -> new?.equals(old) ?: false }
+        if (has == null) {
+            this.add(new)
+        } else {
+            val index = this.indexOf(has)
+            if (index >= this.size) {
+                return
+            }
+            this[index] = new
+        }
+    }
+}
