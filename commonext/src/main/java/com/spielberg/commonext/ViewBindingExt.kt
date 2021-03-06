@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
 
 
 @JvmName("inflateWithGeneric")
-fun <VB : ViewBinding> Any.inflateBindingWithGeneric(layoutInflater: LayoutInflater): VB =
+fun <VB : ViewBinding> Any.inflateBindingWithGeneric(layoutInflater: LayoutInflater): VB? =
     withGenericBindingClass(this) { clazz ->
         clazz.getMethod("inflate", LayoutInflater::class.java).invoke(null, layoutInflater) as VB
     }
@@ -30,7 +30,7 @@ fun <VB : ViewBinding> Any.inflateBindingWithGeneric(
     layoutInflater: LayoutInflater,
     parent: ViewGroup?,
     attachToParent: Boolean
-): VB =
+): VB? =
     withGenericBindingClass(this) { clazz ->
         clazz.getMethod(
             "inflate",
@@ -42,15 +42,15 @@ fun <VB : ViewBinding> Any.inflateBindingWithGeneric(
     }
 
 @JvmName("inflateWithGeneric")
-fun <VB : ViewBinding> Any.inflateBindingWithGeneric(parent: ViewGroup): VB =
+fun <VB : ViewBinding> Any.inflateBindingWithGeneric(parent: ViewGroup): VB? =
     inflateBindingWithGeneric(LayoutInflater.from(parent.context), parent, false)
 
-fun <VB : ViewBinding> Any.bindViewWithGeneric(view: View): VB =
+fun <VB : ViewBinding> Any.bindViewWithGeneric(view: View): VB? =
     withGenericBindingClass(this) { clazz ->
         clazz.getMethod("bind", LayoutInflater::class.java).invoke(null, view) as VB
     }
 
-private fun <VB : ViewBinding> withGenericBindingClass(any: Any, block: (Class<VB>) -> VB): VB {
+private fun <VB : ViewBinding> withGenericBindingClass(any: Any, block: (Class<VB>) -> VB): VB? {
     any.allParameterizedType.forEach { parameterizedType ->
         parameterizedType.actualTypeArguments.forEach {
             try {
@@ -64,7 +64,7 @@ private fun <VB : ViewBinding> withGenericBindingClass(any: Any, block: (Class<V
             }
         }
     }
-    throw IllegalArgumentException("There is no generic of ViewBinding.")
+    return null
 }
 
 inline fun <reified VB : ViewBinding> Activity.binding() = lazy {
