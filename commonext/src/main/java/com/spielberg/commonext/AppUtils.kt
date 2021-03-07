@@ -286,14 +286,6 @@ fun launchAppDetailsSettings(activity: Activity?, requestCode: Int, pkgName: Str
 }
 
 /**
- * Exit the application.
- */
-//fun exitApp() {
-//    finishAllActivities()
-//    System.exit(0)
-//}
-
-/**
  * Return the application's icon.
  *
  * @return the application's icon

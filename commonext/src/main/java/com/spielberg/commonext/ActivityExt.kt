@@ -63,7 +63,6 @@ fun FragmentActivity.finishDelay(delay: Long = 1) {
     LifecycleHandler(this).postDelayed({ finish() }, delay)
 }
 
-//post, postDelay
 fun FragmentActivity.post(action: ()->Unit){
     LifecycleHandler(this).post { action() }
 }
