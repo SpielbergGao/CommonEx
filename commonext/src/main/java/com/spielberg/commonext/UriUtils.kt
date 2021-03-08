@@ -170,12 +170,10 @@ fun uri2FileReal(uri: Uri): File? {
                     val length = java.lang.reflect.Array.getLength(result)
                     for (i in 0 until length) {
                         val storageVolumeElement = java.lang.reflect.Array.get(result, i)
-                        //String uuid = (String) getUuid.invoke(storageVolumeElement);
                         val mounted =
                             ((Environment.MEDIA_MOUNTED == getState.invoke(storageVolumeElement)) || (Environment.MEDIA_MOUNTED_READ_ONLY == getState.invoke(
                                 storageVolumeElement
                             )))
-
                         //if the media is not mounted, we need not get the volume details
                         if (!mounted) continue
 
@@ -214,6 +212,7 @@ fun uri2FileReal(uri: Uri): File? {
             try {
                 availableId = id.toLong()
             } catch (e: Exception) {
+                e.printStackTrace()
                 return null
             }
             val contentUriPrefixesToTry = arrayOf(
