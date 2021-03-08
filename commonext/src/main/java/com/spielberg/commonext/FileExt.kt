@@ -352,8 +352,8 @@ fun String.getFileNameExt(): String? {
  *  @email spielberggao@gmail.com
  *  @describe Return the name of file.
  */
-fun File?.getFileNameExt(file: File?): String? {
-    return if (file == null) "" else this!!.absolutePath.getFileNameExt()
+fun File?.getFileNameExt(): String? {
+    return if (this == null) "" else this.absolutePath.getFileNameExt()
 }
 
 /**
@@ -666,7 +666,7 @@ fun File?.createOrExistsDirExt(): Boolean {
  *  @email spielberggao@gmail.com
  *  @describe Create a file if it doesn't exist, otherwise do nothing.
  */
-fun String?.createOrExistsFileExt(filePath: String?): Boolean {
+fun String?.createOrExistsFileExt(): Boolean {
     return this.getFileByPathExt().createOrExistsFileExt()
 }
 
@@ -691,7 +691,7 @@ fun File?.createOrExistsFileExt(): Boolean {
  *  @email spielberggao@gmail.com
  *  @describe Create a file if it doesn't exist, otherwise delete old file before creating.
  */
-fun String?.createFileByDeleteOldFileExt(filePath: String?): Boolean {
+fun String?.createFileByDeleteOldFileExt(): Boolean {
     return this.getFileByPathExt().createFileByDeleteOldFileExt()
 }
 
