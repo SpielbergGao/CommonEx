@@ -14,7 +14,7 @@ import android.content.Context
  * @param text The text.
  */
 fun copyText(text: CharSequence?) {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     cm?.setPrimaryClip(ClipData.newPlainText(getApplicationByReflect()?.packageName, text))
 }
 
@@ -25,7 +25,7 @@ fun copyText(text: CharSequence?) {
  * @param text  The text.
  */
 fun copyText(label: CharSequence?, text: CharSequence?) {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     cm?.setPrimaryClip(ClipData.newPlainText(label, text))
 }
 
@@ -33,7 +33,7 @@ fun copyText(label: CharSequence?, text: CharSequence?) {
  * Clear the clipboard.
  */
 fun clear() {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     cm?.setPrimaryClip(ClipData.newPlainText(null, ""))
 }
 
@@ -43,7 +43,7 @@ fun clear() {
  * @return the label for clipboard
  */
 fun getLabel(): CharSequence? {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     val des = cm?.primaryClipDescription ?: return ""
     return des.label ?: return ""
 }
@@ -54,7 +54,7 @@ fun getLabel(): CharSequence? {
  * @return the text for clipboard
  */
 fun getText(): CharSequence? {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     val clip = cm?.primaryClip
     if (clip != null && clip.itemCount > 0) {
         val text = clip.getItemAt(0).coerceToText(getApplicationByReflect())
@@ -69,7 +69,7 @@ fun getText(): CharSequence? {
  * Add the clipboard changed listener.
  */
 fun addChangedListener(listener: OnPrimaryClipChangedListener?) {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     cm?.addPrimaryClipChangedListener(listener)
 }
 
@@ -77,6 +77,6 @@ fun addChangedListener(listener: OnPrimaryClipChangedListener?) {
  * Remove the clipboard changed listener.
  */
 fun removeChangedListener(listener: OnPrimaryClipChangedListener?) {
-    val cm = getApplicationByReflect()?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val cm = getApplicationByReflect()?.clipboardManager
     cm?.removePrimaryClipChangedListener(listener)
 }
