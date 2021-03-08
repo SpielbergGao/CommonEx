@@ -157,8 +157,7 @@ fun uri2FileReal(uri: Uri): File? {
             } else {
                 // Below logic is how External Storage provider build URI for documents
                 // http://stackoverflow.com/questions/28605278/android-5-sd-card-label
-                val mStorageManager =
-                    getApplicationByReflect()?.getSystemService(Context.STORAGE_SERVICE) as? StorageManager
+                val mStorageManager = getApplicationByReflect()?.storageManager
                 try {
                     val storageVolumeClazz = Class.forName("android.os.storage.StorageVolume")
                     val getVolumeList = mStorageManager?.javaClass?.getMethod("getVolumeList")
@@ -240,17 +239,20 @@ fun uri2FileReal(uri: Uri): File? {
         else if (("com.android.providers.media.documents" == authority)) {
             val docId = DocumentsContract.getDocumentId(uri)
             val split = docId.split(":".toRegex()).toTypedArray()
-            val type = split[0]
-            val contentUri: Uri
-            if (("image" == type)) {
-                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            } else if (("video" == type)) {
-                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            } else if (("audio" == type)) {
-                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            } else {
-                Log.d("UriUtils", "$uri parse failed. -> 1_2")
-                return null
+            val contentUri: Uri = when (split[0]) {
+                "image" -> {
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                }
+                "video" -> {
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                }
+                "audio" -> {
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                }
+                else -> {
+                    Log.d("UriUtils", "$uri parse failed. -> 1_2")
+                    return null
+                }
             }
             val selection = "_id=?"
             val selectionArgs = arrayOf(split[1])
