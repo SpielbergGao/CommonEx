@@ -7,6 +7,7 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
 private val SDF_THREAD_LOCAL: ThreadLocal<MutableMap<String, SimpleDateFormat>> =
     object : ThreadLocal<MutableMap<String, SimpleDateFormat>>() {
@@ -236,9 +237,7 @@ fun getTimeSpan(
     date2: Date,
     @TimeConstants.Unit unit: Int
 ): Long {
-    return millis2TimeSpan(
-        date1.date2MillisExt() - date2.date2MillisExt(), unit
-    )
+    return millis2TimeSpan(date1.date2MillisExt() - date2.date2MillisExt(), unit)
 }
 
 /**
@@ -288,10 +287,8 @@ fun getFitTimeSpan(
     time2: String,
     precision: Int
 ): String? {
-    val delta: Long = string2Millis(time1, getDefaultFormat()) - string2Millis(
-        time2,
-        getDefaultFormat()
-    )
+    val delta: Long =
+        string2Millis(time1, getDefaultFormat()) - string2Millis(time2, getDefaultFormat())
     return millis2FitTimeSpan(delta, precision)
 }
 
@@ -525,12 +522,7 @@ fun getFitTimeSpanByNow(
     format: DateFormat,
     precision: Int
 ): String? {
-    return getFitTimeSpan(
-        time,
-        getNowString(format),
-        format,
-        precision
-    )
+    return getFitTimeSpan(time, getNowString(format), format, precision)
 }
 
 /**
@@ -549,11 +541,7 @@ fun getFitTimeSpanByNow(
  * @return the fit time span by now
  */
 fun getFitTimeSpanByNow(date: Date, precision: Int): String? {
-    return getFitTimeSpan(
-        date,
-        getNowDate(),
-        precision
-    )
+    return getFitTimeSpan(date, getNowDate(), precision)
 }
 
 /**
@@ -572,11 +560,7 @@ fun getFitTimeSpanByNow(date: Date, precision: Int): String? {
  * @return the fit time span by now
  */
 fun getFitTimeSpanByNow(millis: Long, precision: Int): String? {
-    return getFitTimeSpan(
-        millis,
-        System.currentTimeMillis(),
-        precision
-    )
+    return getFitTimeSpan(millis, System.currentTimeMillis(), precision)
 }
 
 /**
@@ -616,10 +600,7 @@ fun getFriendlyTimeSpanByNow(time: String): String? {
  *  * 时间不合法的情况全部日期和时间信息，如星期六 十月 27 14:21:20 CST 2007
  *
  */
-fun getFriendlyTimeSpanByNow(
-    time: String,
-    format: DateFormat
-): String? {
+fun getFriendlyTimeSpanByNow(time: String, format: DateFormat): String? {
     return getFriendlyTimeSpanByNow(string2Millis(time, format))
 }
 
@@ -660,23 +641,33 @@ fun getFriendlyTimeSpanByNow(date: Date): String? {
 fun getFriendlyTimeSpanByNow(millis: Long): String? {
     val now = System.currentTimeMillis()
     val span = now - millis
-    if (span < 0) // U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
-        return String.format("%tc", millis)
-    if (span < 1000) {
-        return "刚刚"
-    } else if (span < TimeConstants.MIN) {
-        return java.lang.String.format(Locale.getDefault(), "%d秒前", span / TimeConstants.SEC)
-    } else if (span < TimeConstants.HOUR) {
-        return java.lang.String.format(Locale.getDefault(), "%d分钟前", span / TimeConstants.MIN)
-    }
-    // 获取当天 00:00
-    val wee = getWeeOfToday()
-    return if (millis >= wee) {
-        String.format("今天%tR", millis)
-    } else if (millis >= wee - TimeConstants.DAY) {
-        String.format("昨天%tR", millis)
-    } else {
-        String.format("%tF", millis)
+    // U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
+    if (span < 0) return String.format("%tc", millis)
+    when {
+        span < 1000 -> {
+            return "刚刚"
+        }
+        span < TimeConstants.MIN -> {
+            return java.lang.String.format(Locale.getDefault(), "%d秒前", span / TimeConstants.SEC)
+        }
+        span < TimeConstants.HOUR -> {
+            return java.lang.String.format(Locale.getDefault(), "%d分钟前", span / TimeConstants.MIN)
+        }
+        // 获取当天 00:00
+        else -> {
+            val wee = getWeeOfToday()
+            return when {
+                millis >= wee -> {
+                    String.format("今天%tR", millis)
+                }
+                millis >= wee - TimeConstants.DAY -> {
+                    String.format("昨天%tR", millis)
+                }
+                else -> {
+                    String.format("%tF", millis)
+                }
+            }
+        }
     }
 }
 
@@ -912,9 +903,7 @@ fun getString(
     timeSpan: Long,
     @TimeConstants.Unit unit: Int
 ): String? {
-    return millis2StringExt(
-        date.date2MillisExt() + timeSpan2Millis(timeSpan, unit), format
-    )
+    return millis2StringExt(date.date2MillisExt() + timeSpan2Millis(timeSpan, unit), format)
 }
 
 /**
@@ -1145,9 +1134,7 @@ fun isToday(millis: Long): Boolean {
  * @return `true`: yes<br></br>`false`: no
  */
 fun isLeapYear(time: String?): Boolean {
-    return isLeapYear(
-        string2DateExt(time, getDefaultFormat())
-    )
+    return isLeapYear(string2DateExt(time, getDefaultFormat()))
 }
 
 /**
@@ -1203,12 +1190,7 @@ fun isLeapYear(year: Int): Boolean {
  * @return the day of week in Chinese
  */
 fun getChineseWeek(time: String): String? {
-    return getChineseWeek(
-        string2DateExt(
-            time,
-            getDefaultFormat()
-        )
-    )
+    return getChineseWeek(string2DateExt(time, getDefaultFormat()))
 }
 
 /**
@@ -1251,12 +1233,7 @@ fun getChineseWeek(millis: Long): String? {
  * @return the day of week in US
  */
 fun getUSWeek(time: String): String? {
-    return getUSWeek(
-        string2DateExt(
-            time,
-            getDefaultFormat()
-        )
-    )
+    return getUSWeek(string2DateExt(time, getDefaultFormat()))
 }
 
 /**
@@ -1309,11 +1286,7 @@ fun isAm(): Boolean {
  * @return `true`: yes<br></br>`false`: no
  */
 fun isAm(time: String?): Boolean {
-    return getValueByCalendarField(
-        time,
-        getDefaultFormat(),
-        GregorianCalendar.AM_PM
-    ) == 0
+    return getValueByCalendarField(time, getDefaultFormat(), GregorianCalendar.AM_PM) == 0
 }
 
 /**
@@ -1323,10 +1296,7 @@ fun isAm(time: String?): Boolean {
  * @param format The format.
  * @return `true`: yes<br></br>`false`: no
  */
-fun isAm(
-    time: String?,
-    format: DateFormat
-): Boolean {
+fun isAm(time: String?, format: DateFormat): Boolean {
     return getValueByCalendarField(time, format, GregorianCalendar.AM_PM) == 0
 }
 
@@ -1510,12 +1480,7 @@ private val CHINESE_ZODIAC = arrayOf("猴", "鸡", "狗", "猪", "鼠", "牛", "
  * @return the Chinese zodiac
  */
 fun getChineseZodiac(time: String?): String? {
-    return getChineseZodiac(
-        string2DateExt(
-            time,
-            getDefaultFormat()
-        )
-    )
+    return getChineseZodiac(string2DateExt(time, getDefaultFormat()))
 }
 
 /**
@@ -1576,12 +1541,7 @@ private val ZODIAC = arrayOf(
  * @return the zodiac
  */
 fun getZodiac(time: String?): String? {
-    return getZodiac(
-        string2DateExt(
-            time,
-            getDefaultFormat()
-        )
-    )
+    return getZodiac(string2DateExt(time, getDefaultFormat()))
 }
 
 /**
@@ -1638,7 +1598,7 @@ fun millis2FitTimeSpan(millis: Long, precision: Int): String? {
     var millis = millis
     var precision = precision
     if (precision <= 0) return null
-    precision = Math.min(precision, 5)
+    precision = min(precision, 5)
     val units = arrayOf("天", "小时", "分钟", "秒", "毫秒")
     if (millis == 0L) return units[precision - 1]
     val sb = StringBuilder()
