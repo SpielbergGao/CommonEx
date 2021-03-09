@@ -560,23 +560,20 @@ fun String?.isFileExistsExt(): Boolean {
 }
 
 fun String?.isFileExistsApi29Ext(): Boolean {
-    if (Build.VERSION.SDK_INT >= 29) {
-        try {
-            val uri = Uri.parse(this)
-            val cr: ContentResolver? = getApplicationByReflect()?.contentResolver
-            val afd = cr?.openAssetFileDescriptor(uri, "r") ?: return false
-            try {
-                afd.close()
-            } catch (ignore: IOException) {
-                ignore.printStackTrace()
-            }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-            return false
-        }
-        return true
+    if (Build.VERSION.SDK_INT < 29) return false
+    try {
+        val uri = Uri.parse(this)
+        val cr: ContentResolver? = getApplicationByReflect()?.contentResolver
+        val afd = cr?.openAssetFileDescriptor(uri, "r") ?: return false
+        afd.close()
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+        return false
+    } catch (ignore: IOException) {
+        ignore.printStackTrace()
+        return false
     }
-    return false
+    return true
 }
 
 /**
