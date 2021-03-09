@@ -114,7 +114,7 @@ fun getNotification(
     consumer: Consumer<NotificationCompat.Builder>
 ): Notification {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val nm = getApplicationByReflect()?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        val nm = getApplicationByReflect()?.notificationManager
         nm?.createNotificationChannel(channelConfig.notificationChannel!!)
     }
     val builder: NotificationCompat.Builder = NotificationCompat.Builder(getApplicationByReflect())
