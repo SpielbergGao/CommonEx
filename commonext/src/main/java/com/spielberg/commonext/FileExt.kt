@@ -1238,14 +1238,8 @@ fun File.getDirLengthExt(): Long {
     if (!this.isDirExt()) return 0
     var len: Long = 0
     val files = this.listFiles()
-    if (files != null && files.isNotEmpty()) {
-        for (file in files) {
-            len += if (file.isDirectory) {
-                file.getDirLengthExt()
-            } else {
-                file.length()
-            }
-        }
+    files?.forEach {
+        len += if (it.isDirectory) it.getDirLengthExt() else it.length()
     }
     return len
 }
