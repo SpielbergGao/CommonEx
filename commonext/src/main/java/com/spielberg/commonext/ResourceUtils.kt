@@ -217,9 +217,9 @@ fun readAssets2List(
     assetsPath: String?,
     charsetName: String?
 ): List<String?>? {
-    if (assetsPath.isEmptyOrBlankExt())return emptyList()
+    if (assetsPath.isEmptyOrBlankExt()) return emptyList()
     return try {
-       inputStream2Lines(
+        inputStream2Lines(
             getApplicationByReflect()?.resources?.assets?.open(assetsPath!!),
             charsetName
         )
