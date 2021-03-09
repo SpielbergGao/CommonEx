@@ -85,16 +85,6 @@ fun String?.isAppInstalled(): Boolean {
 }
 
 /**
- * Return whether the application with root permission.
- *
- * @return `true`: yes<br></br>`false`: no
- */
-//fun isAppRoot(): Boolean {
-//    val result = execCmd("echo root", true) ?: return false
-//    return result!!.result === 0
-//}
-
-/**
  * Return whether it is a debug application.
  *
  * @return `true`: yes<br></br>`false`: no
@@ -145,15 +135,6 @@ fun String?.isAppSystem(): Boolean {
 /**
  * Return whether application is foreground.
  *
- * @return `true`: yes<br></br>`false`: no
- */
-//fun isAppForeground(): Boolean {
-//    return UtilsBridge.isAppForeground()
-//}
-
-/**
- * Return whether application is foreground.
- *
  * Target APIs greater than 21 must hold
  * `<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />`
  *
@@ -175,20 +156,18 @@ fun String?.isAppRunning(): Boolean {
     val context = getApplicationByReflect() ?: return false
     val ai: ApplicationInfo = context.applicationInfo
     val uid = ai.uid
-    val am: ActivityManager? = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+    val am: ActivityManager? = context.activityManager
     if (am != null) {
         val taskInfo = am.getRunningTasks(Int.MAX_VALUE)
-        if (taskInfo != null && taskInfo.size > 0) {
+        if (!taskInfo.isNullOrEmpty()) {
             for (aInfo: RunningTaskInfo in taskInfo) {
-                if (aInfo.baseActivity != null) {
-                    if (this == aInfo.baseActivity!!.packageName) {
-                        return true
-                    }
+                if (aInfo.baseActivity != null && this == aInfo.baseActivity!!.packageName) {
+                    return true
                 }
             }
         }
         val serviceInfo = am.getRunningServices(Int.MAX_VALUE)
-        if (serviceInfo != null && serviceInfo.size > 0) {
+        if (!serviceInfo.isNullOrEmpty()) {
             for (aInfo: ActivityManager.RunningServiceInfo in serviceInfo) {
                 if (uid == aInfo.uid) {
                     return true
@@ -256,7 +235,7 @@ fun launchAppDetailsSettings() {
  */
 fun launchAppDetailsSettings(pkgName: String?) {
     if (pkgName.isEmptyOrBlankExt()) return
-    val intent: Intent = getLaunchAppDetailsSettingsIntent(pkgName, true)?:return
+    val intent: Intent = getLaunchAppDetailsSettingsIntent(pkgName, true) ?: return
     if (!isIntentAvailable(intent)) return
     getApplicationByReflect()?.startActivity(intent)
 }
@@ -608,10 +587,11 @@ private fun getAppSignaturesHash(packageName: String, algorithm: String): List<S
     val signatures = packageName.getAppSignatures()
     if (signatures == null || signatures.isEmpty()) return result
     for (signature: Signature in signatures) {
-        val hash: String? = hashTemplate(signature.toByteArray(), algorithm).bytes2HexStringExt()?.replace(
-            "(?<=[0-9A-F]{2})[0-9A-F]{2}",
-            ":$0"
-        )
+        val hash: String? =
+            hashTemplate(signature.toByteArray(), algorithm).bytes2HexStringExt()?.replace(
+                "(?<=[0-9A-F]{2})[0-9A-F]{2}",
+                ":$0"
+            )
         result.add(hash)
     }
     return result
