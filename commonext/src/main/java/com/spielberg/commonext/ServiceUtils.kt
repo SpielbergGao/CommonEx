@@ -1,6 +1,5 @@
 package com.spielberg.commonext
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
@@ -14,8 +13,7 @@ import java.util.*
  */
 fun getAllRunningServices(): Set<String>? {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) return null
-    val am =
-        getApplicationByReflect()?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+    val am = getApplicationByReflect()?.activityManager
     val info = am?.getRunningServices(0x7FFFFFFF)
     val names: MutableSet<String> = HashSet()
     if (info == null || info.size == 0) return null
@@ -213,8 +211,7 @@ fun isServiceRunning(cls: Class<*>): Boolean {
 fun isServiceRunning(className: String): Boolean {
     return try {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            val am =
-                getApplicationByReflect()?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+            val am = getApplicationByReflect()?.activityManager
             val info = am?.getRunningServices(0x7FFFFFFF)
             if (info == null || info.size == 0) return false
             for (aInfo in info) {
