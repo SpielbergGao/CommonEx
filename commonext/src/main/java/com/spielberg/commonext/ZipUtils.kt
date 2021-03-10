@@ -18,7 +18,7 @@ private const val BUFFER_LEN = 8192
  * @throws IOException if an I/O error has occurred
  */
 @Throws(IOException::class)
-fun zipFiles(srcFiles: Collection<String?>?, zipFilePath: String?): Boolean {
+fun zipFiles(srcFiles: Collection<String>?, zipFilePath: String?): Boolean {
     return zipFiles(srcFiles, zipFilePath, null)
 }
 
@@ -32,7 +32,7 @@ fun zipFiles(srcFiles: Collection<String?>?, zipFilePath: String?): Boolean {
  * @throws IOException if an I/O error has occurred
  */
 @Throws(IOException::class)
-fun zipFiles(srcFilePaths: Collection<String?>?, zipFilePath: String?, comment: String?): Boolean {
+fun zipFiles(srcFilePaths: Collection<String>?, zipFilePath: String?, comment: String?): Boolean {
     if (srcFilePaths == null || zipFilePath == null) return false
     var zos: ZipOutputStream? = null
     return try {
