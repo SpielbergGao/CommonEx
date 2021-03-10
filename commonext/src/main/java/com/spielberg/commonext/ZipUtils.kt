@@ -43,9 +43,9 @@ fun zipFiles(srcFilePaths: Collection<String>?, zipFilePath: String?, comment: S
         }
         true
     } finally {
-        if (zos != null) {
-            zos.finish()
-            zos.close()
+        zos?.apply {
+            finish()
+            finish()
         }
     }
 }
@@ -83,9 +83,9 @@ fun zipFiles(srcFiles: Collection<File>?, zipFile: File?, comment: String?): Boo
         }
         true
     } finally {
-        if (zos != null) {
-            zos.finish()
-            zos.close()
+        zos?.apply {
+            finish()
+            close()
         }
     }
 }
