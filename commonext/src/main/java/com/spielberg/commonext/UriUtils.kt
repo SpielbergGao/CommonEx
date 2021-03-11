@@ -333,23 +333,20 @@ fun getFileFromUri(
 }
 
 private fun copyUri2Cache(uri: Uri): File? {
-    Log.d("UriUtils", "copyUri2Cache() called")
     var inputStream: InputStream? = null
-    try {
+    return try {
         inputStream = getApplicationByReflect()?.contentResolver?.openInputStream(uri)
         val file = File(getApplicationByReflect()?.cacheDir, System.currentTimeMillis().toString())
         writeFileFromIS(file.absolutePath, inputStream)
-        return file
+        file
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
-        return null
+        null
     } finally {
-        if (inputStream != null) {
-            try {
-                inputStream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        try {
+            inputStream?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }
@@ -363,20 +360,18 @@ private fun copyUri2Cache(uri: Uri): File? {
 fun uri2Bytes(uri: Uri?): ByteArray? {
     if (uri == null) return null
     var inputStream: InputStream? = null
-    try {
+    return try {
         inputStream = getApplicationByReflect()?.contentResolver?.openInputStream(uri)
-        return inputStream.inputStream2BytesExt()
+        inputStream.inputStream2BytesExt()
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
         Log.d("UriUtils", "uri to bytes failed.")
-        return null
+        null
     } finally {
-        if (inputStream != null) {
-            try {
-                inputStream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        try {
+            inputStream?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }
