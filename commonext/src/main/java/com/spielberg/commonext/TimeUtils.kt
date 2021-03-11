@@ -82,12 +82,13 @@ fun string2MillisExt(time: String?, pattern: String): Long {
  *  @describe Formatted time string to the milliseconds.
  */
 fun string2MillisExt(time: String?, format: DateFormat): Long {
-    try {
-        return format.parse(time).time
+    if (time.isEmptyOrBlankExt()) return -1
+    return try {
+        format.parse(time).time
     } catch (e: ParseException) {
         e.printStackTrace()
+        -1
     }
-    return -1
 }
 
 /**
@@ -114,12 +115,12 @@ fun string2DateExt(time: String?, pattern: String): Date? {
  *  @describe Formatted time string to the date.
  */
 fun string2DateExt(time: String?, format: DateFormat): Date? {
-    try {
-        return format.parse(time)
+    return try {
+        format.parse(time)
     } catch (e: ParseException) {
         e.printStackTrace()
+        null
     }
-    return null
 }
 
 /**
@@ -1649,12 +1650,12 @@ fun string2Millis(time: String, pattern: String): Long {
  * @return the milliseconds
  */
 fun string2Millis(time: String, format: DateFormat): Long {
-    try {
-        return format.parse(time).time
+    return try {
+        format.parse(time).time
     } catch (e: ParseException) {
         e.printStackTrace()
+        -1
     }
-    return -1
 }
 
 private fun millis2TimeSpan(millis: Long, @TimeConstants.Unit unit: Int): Long {
