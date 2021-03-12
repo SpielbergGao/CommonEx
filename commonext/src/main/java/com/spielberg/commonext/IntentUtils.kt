@@ -224,7 +224,7 @@ fun getShareTextImageIntent(content: String, imageUri: Uri?): Intent? {
  * @param imagePaths The paths of images.
  * @return the intent of share images
  */
-fun getShareImageIntent(imagePaths: LinkedList<String?>?): Intent? {
+fun getShareImageIntent(imagePaths: LinkedList<String>?): Intent? {
     return getShareTextImageIntent("", imagePaths)
 }
 
@@ -234,7 +234,7 @@ fun getShareImageIntent(imagePaths: LinkedList<String?>?): Intent? {
  * @param images The files of images.
  * @return the intent of share images
  */
-fun getShareImageIntent(images: List<File?>?): Intent? {
+fun getShareImageIntent(images: List<File>?): Intent? {
     return getShareTextImageIntent("", images)
 }
 
@@ -244,7 +244,7 @@ fun getShareImageIntent(images: List<File?>?): Intent? {
  * @param uris The uris of image.
  * @return the intent of share image
  */
-fun getShareImageIntent(uris: ArrayList<Uri?>?): Intent? {
+fun getShareImageIntent(uris: ArrayList<Uri>?): Intent? {
     return getShareTextImageIntent("", uris)
 }
 
@@ -257,9 +257,9 @@ fun getShareImageIntent(uris: ArrayList<Uri?>?): Intent? {
  */
 fun getShareTextImageIntent(
     content: String,
-    imagePaths: LinkedList<String?>?
+    imagePaths: LinkedList<String>?
 ): Intent? {
-    val files: MutableList<File?> = ArrayList()
+    val files: MutableList<File> = ArrayList()
     if (imagePaths != null) {
         for (imagePath in imagePaths) {
             val file: File? = imagePath.getFileByPathExt()
@@ -278,8 +278,8 @@ fun getShareTextImageIntent(
  * @param images  The files of images.
  * @return the intent of share images
  */
-fun getShareTextImageIntent(content: String?, images: List<File?>?): Intent? {
-    val uris = ArrayList<Uri?>()
+fun getShareTextImageIntent(content: String?, images: List<File>?): Intent? {
+    val uris = ArrayList<Uri>()
     if (images != null) {
         for (image in images) {
             val uri: Uri? = image?.file2UriExt()
@@ -298,7 +298,7 @@ fun getShareTextImageIntent(content: String?, images: List<File?>?): Intent? {
  * @param uris    The uris of image.
  * @return the intent of share image
  */
-fun getShareTextImageIntent(content: String?, uris: ArrayList<Uri?>?): Intent? {
+fun getShareTextImageIntent(content: String?, uris: ArrayList<Uri>?): Intent? {
     var intent = Intent(Intent.ACTION_SEND_MULTIPLE)
     intent.putExtra(Intent.EXTRA_TEXT, content)
     intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
