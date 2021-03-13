@@ -4,7 +4,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
-fun String.getClassInvokeMethodExt(methodName: String, parameterTypes: Array<Class<*>?>): Method? {
+fun String.getClassInvokeMethodExt(methodName: String, parameterTypes: Array<Class<*>>): Method? {
     try {
         return Class.forName(this).getMethod(methodName, *parameterTypes)
     } catch (e: SecurityException) {
@@ -68,7 +68,7 @@ fun String.getClassInvokeDeclaredFieldExt(filedName: String): Field? {
 fun invokeStaticMethodExt(
     className: String?,
     methodMame: String,
-    parameterTypes: Array<Class<*>?>,
+    parameterTypes: Array<Class<*>>,
     pareValues: Array<Any?>
 ): Any? {
     return className?.getClassInvokeMethodExt(methodMame, parameterTypes)?.invoke(null, pareValues)
@@ -84,7 +84,7 @@ fun invokeMethodExt(
     className: String,
     methodMame: String,
     obj: Any?,
-    parameterTypes: Array<Class<*>?>,
+    parameterTypes: Array<Class<*>>,
     pareValues: Array<Any?>
 ): Any? {
     return className.getClassInvokeMethodExt(methodMame, parameterTypes)?.invoke(obj, pareValues)
