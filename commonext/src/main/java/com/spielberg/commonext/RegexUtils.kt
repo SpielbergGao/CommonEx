@@ -43,7 +43,7 @@ fun isMobileExact(input: CharSequence?): Boolean {
  * @param newSegments The new segments of mobile number.
  * @return `true`: yes<br></br>`false`: no
  */
-fun isMobileExact(input: CharSequence?, newSegments: List<String?>?): Boolean {
+fun isMobileExact(input: CharSequence?, newSegments: List<String>?): Boolean {
     val match = isMatch(RegexConstants.REGEX_MOBILE_EXACT, input)
     if (match) return true
     if (newSegments == null) return false
@@ -55,7 +55,7 @@ fun isMobileExact(input: CharSequence?, newSegments: List<String?>?): Boolean {
         }
     }
     for (newSegment in newSegments) {
-        if (content.startsWith(newSegment!!)) {
+        if (content.startsWith(newSegment)) {
             return true
         }
     }
@@ -255,8 +255,9 @@ fun getMatches(regex: String, input: CharSequence?): List<String>? {
  * @param regex The regex.
  * @return the array of strings computed by splitting input around matches of regex
  */
-fun getSplits(input: String?, regex: String): Array<String?>? {
-    return input?.split(regex.toRegex())?.toTypedArray() ?: arrayOfNulls(0)
+fun getSplits(input: String?, regex: String): Array<String>? {
+    if (input.isEmptyOrBlankExt()) return arrayOf()
+    return input!!.split(regex.toRegex()).toTypedArray()
 }
 
 /**
