@@ -202,7 +202,7 @@ fun readAssets2String(assetsFilePath: String?, charsetName: String?): String? {
  * @param assetsPath The path of file in assets.
  * @return the content of file in assets
  */
-fun readAssets2List(assetsPath: String?): List<String?>? {
+fun readAssets2List(assetsPath: String?): List<String>? {
     return readAssets2List(assetsPath, "")
 }
 
@@ -216,7 +216,7 @@ fun readAssets2List(assetsPath: String?): List<String?>? {
 fun readAssets2List(
     assetsPath: String?,
     charsetName: String?
-): List<String?>? {
+): List<String>? {
     if (assetsPath.isEmptyOrBlankExt()) return emptyList()
     return try {
         inputStream2Lines(
@@ -282,7 +282,7 @@ fun readRaw2String(@RawRes resId: Int, charsetName: String?): String? {
  * @param resId The resource id.
  * @return the content of file in assets
  */
-fun readRaw2List(@RawRes resId: Int): List<String?>? {
+fun readRaw2List(@RawRes resId: Int): List<String>? {
     return readRaw2List(resId, "")
 }
 
@@ -296,7 +296,7 @@ fun readRaw2List(@RawRes resId: Int): List<String?>? {
 fun readRaw2List(
     @RawRes resId: Int,
     charsetName: String?
-): List<String?>? {
+): List<String>? {
     return inputStream2Lines(
         getApplicationByReflect()?.resources?.openRawResource(resId),
         charsetName
