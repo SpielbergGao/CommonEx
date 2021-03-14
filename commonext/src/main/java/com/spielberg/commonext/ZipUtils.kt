@@ -322,7 +322,7 @@ private fun unzipChildFile(
  *  @describe Return the files' path in ZIP file.
  */
 @Throws(IOException::class)
-fun String?.getFilesPathExt(): List<String?>? {
+fun String?.getFilesPathExt(): List<String>? {
     return this.getFileByPathExt().getFilesPathExt()
 }
 
@@ -358,7 +358,7 @@ fun File?.getFilesPathExt(): List<String>? {
  *  The path of ZIP file.
  */
 @Throws(IOException::class)
-fun String?.getCommentsExt(): List<String?>? {
+fun String?.getCommentsExt(): List<String>? {
     return this.getFileByPathExt().getCommentsExt()
 }
 
