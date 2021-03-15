@@ -1,42 +1,36 @@
-package com.spielberg.commonext;
+package com.spielberg.commonext
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+object BroadCastExt{
 
-public class BroadCastExt {
-    private BroadCastExt() {
-        throw new RuntimeException("Do not need instantiate!");
+    fun getBroadcastManager(ctx: Context?): LocalBroadcastManager {
+        return LocalBroadcastManager.getInstance(ctx!!)
     }
 
-
-    public static LocalBroadcastManager getBroadcastManager(Context ctx) {
-        return LocalBroadcastManager.getInstance(ctx);
-    }
-
-
-    public static IntentFilter getIntentFilter(String... actions) {
-        IntentFilter filter = null;
-        if (actions.length > 0) {
-            filter = new IntentFilter();
-            for (String action : actions) {
-                filter.addAction(action);
+    fun getIntentFilter(vararg actions: String?): IntentFilter? {
+        var filter: IntentFilter? = null
+        if (actions.isNotEmpty()) {
+            filter = IntentFilter()
+            for (action in actions) {
+                filter.addAction(action)
             }
         }
-        return filter;
+        return filter
     }
 
     /**
      * @Desc 通过Action注册广播接收者
      * @Param [ctx, receiver, actions]
      */
-    public static void registerReceiver(Context ctx, BroadcastReceiver receiver, String... actions) {
-        IntentFilter filter = getIntentFilter(actions);
+    fun registerReceiver(ctx: Context?, receiver: BroadcastReceiver?, vararg actions: String?) {
+        val filter = getIntentFilter(*actions)
         if (filter != null) {
-            registerReceiver(ctx, receiver, filter);
+            registerReceiver(ctx, receiver, filter)
         }
     }
 
@@ -44,72 +38,48 @@ public class BroadCastExt {
      * @Desc 通过IntentFilter注册广播接收者
      * @Param [ctx, receiver, filter]
      */
-    public static void registerReceiver(Context ctx, BroadcastReceiver receiver, IntentFilter filter) {
-        getBroadcastManager(ctx).registerReceiver(receiver, filter);
+    fun registerReceiver(ctx: Context?, receiver: BroadcastReceiver?, filter: IntentFilter?) {
+        getBroadcastManager(ctx).registerReceiver(receiver!!, filter!!)
     }
 
     /**
      * @Desc 注销广播接收者
      * @Param [ctx, receiver]
      */
-    public static void unRegisterReceiver(Context ctx, BroadcastReceiver receiver) {
-        getBroadcastManager(ctx).unregisterReceiver(receiver);
+    fun unRegisterReceiver(ctx: Context?, receiver: BroadcastReceiver?) {
+        getBroadcastManager(ctx).unregisterReceiver(receiver!!)
     }
 
     /**
      * @Desc 通过Action发送广播
      * @Param [ctx, action]
      */
-    public static void sendBroadcast(Context ctx, String action) {
-        sendBroadcast(ctx, new Intent(action));
+    fun sendBroadcast(ctx: Context?, action: String?) {
+        sendBroadcast(ctx, Intent(action))
     }
 
     /**
      * @Desc 通过intent发送广播
      * @Param [ctx, intent]
      */
-    public static void sendBroadcast(Context ctx, Intent intent) {
-        getBroadcastManager(ctx).sendBroadcast(intent);
+    fun sendBroadcast(ctx: Context?, intent: Intent?) {
+        getBroadcastManager(ctx).sendBroadcast(intent!!)
     }
 
     /**
      * @Desc 通过Action同步发送广播
      * @Param [ctx, action]
      */
-    public static void sendBroadcastSync(Context ctx, String action) {
-        sendBroadcastSync(ctx, new Intent(action));
+    fun sendBroadcastSync(ctx: Context?, action: String?) {
+        sendBroadcastSync(ctx, Intent(action))
     }
 
     /**
      * @Desc 通过Intent同步发送广播
      * @Param [ctx, intent]
      */
-    public static void sendBroadcastSync(Context ctx, Intent intent) {
-        getBroadcastManager(ctx).sendBroadcastSync(intent);
-    }
-    // ChatConst.EXTRA_STOP_CHAT
-    public static void sendStopChat(Context ctx, String reason) {
-        Intent intent = new Intent(ChatingService.ACTION_STOP);
-        intent.putExtra(ChatConst.EXTRA_STOP_CHAT, reason);
-        sendBroadcast(ctx, intent);
+    fun sendBroadcastSync(ctx: Context?, intent: Intent?) {
+        getBroadcastManager(ctx).sendBroadcastSync(intent!!)
     }
 
-    //也是挂断，但是携带具体原因参考LLContstant
-//    public static void sendStopChat(Context ctx, PushRoomStateBean bean) {
-//        Intent intent = new Intent(LLChatingService.ACTION_STOP);
-//        intent.putExtra(EXTRA_ACTION_STOP, bean);
-//        sendBroadcast(ctx, intent);
-//    }
-
-//    public static void sendPushOnlineState(Context ctx, PushRoomStateBean bean) {
-//        Logger.i("push_inf0 -> " + bean);
-//        if (bean == null) return;
-//        if (Utils.isStopChatPush(bean.operate)) {
-//            sendStopChat(ctx, bean);
-//        } else {
-//            Intent intent = new Intent(LLChatingService.ACTION_ROOM_CHANGE);
-//            intent.putExtra(EXTRA_ACTION_ONLINE_SATTE, bean);
-//            sendBroadcast(ctx, intent);
-//        }
-//    }
 }
