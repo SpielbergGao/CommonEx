@@ -25,10 +25,10 @@ fun getIntentFilter(vararg actions: String?): IntentFilter? {
  * @Desc 通过Action注册广播接收者
  * @Param [ctx, receiver, actions]
  */
-fun registerReceiver(ctx: Context?, receiver: BroadcastReceiver, vararg actions: String) {
+fun Context?.registerReceiver(receiver: BroadcastReceiver, vararg actions: String) {
     val filter = getIntentFilter(*actions)
     if (filter != null) {
-        registerReceiver(ctx, receiver, filter)
+        this?.registerReceiver(receiver, filter)
     }
 }
 
@@ -36,46 +36,46 @@ fun registerReceiver(ctx: Context?, receiver: BroadcastReceiver, vararg actions:
  * @Desc 通过IntentFilter注册广播接收者
  * @Param [ctx, receiver, filter]
  */
-fun registerReceiver(ctx: Context?, receiver: BroadcastReceiver, filter: IntentFilter) {
-    ctx?.getBroadcastManager()?.registerReceiver(receiver, filter)
+fun Context?.registerReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
+    this?.getBroadcastManager()?.registerReceiver(receiver, filter)
 }
 
 /**
  * @Desc 注销广播接收者
  * @Param [ctx, receiver]
  */
-fun unRegisterReceiver(ctx: Context?, receiver: BroadcastReceiver) {
-    ctx?.getBroadcastManager()?.unregisterReceiver(receiver)
+fun Context?.unRegisterReceiver(receiver: BroadcastReceiver) {
+    this?.getBroadcastManager()?.unregisterReceiver(receiver)
 }
 
 /**
  * @Desc 通过Action发送广播
  * @Param [ctx, action]
  */
-fun sendBroadcast(ctx: Context?, action: String?) {
-    sendBroadcast(ctx, Intent(action))
+fun Context?.sendBroadcast(action: String?) {
+    this?.sendBroadcast(Intent(action))
 }
 
 /**
  * @Desc 通过intent发送广播
  * @Param [ctx, intent]
  */
-fun sendBroadcast(ctx: Context?, intent: Intent) {
-    ctx?.getBroadcastManager()?.sendBroadcast(intent)
+fun Context?.sendBroadcast(intent: Intent) {
+    this?.getBroadcastManager()?.sendBroadcast(intent)
 }
 
 /**
  * @Desc 通过Action同步发送广播
  * @Param [ctx, action]
  */
-fun sendBroadcastSync(ctx: Context?, action: String?) {
-    sendBroadcastSync(ctx, Intent(action))
+fun Context?.sendBroadcastSync(action: String?) {
+    this?.sendBroadcastSync(Intent(action))
 }
 
 /**
  * @Desc 通过Intent同步发送广播
  * @Param [ctx, intent]
  */
-fun sendBroadcastSync(ctx: Context?, intent: Intent) {
-    ctx?.getBroadcastManager()?.sendBroadcastSync(intent)
+fun Context?.sendBroadcastSync(intent: Intent) {
+    this?.getBroadcastManager()?.sendBroadcastSync(intent)
 }
