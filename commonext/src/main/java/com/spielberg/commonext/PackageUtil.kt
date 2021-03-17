@@ -40,17 +40,17 @@ fun install(context: Context, file: File?): Boolean {
 /**
  * 调用系统卸载应用
  */
-fun uninstallApk(context: Context, packageName: String) {
+fun Context.uninstallApk(packageName: String) {
     val intent = Intent(Intent.ACTION_DELETE)
     val packageURI: Uri = Uri.parse("package:$packageName")
     intent.data = packageURI
-    context.startActivity(intent)
+    this.startActivity(intent)
 }
 
 /**
  * 打开已安装应用的详情
  */
-fun goToInstalledAppDetails(context: Context, packageName: String?) {
+fun Context.goToInstalledAppDetails(packageName: String?) {
     val intent = Intent()
     val sdkVersion = Build.VERSION.SDK_INT
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -65,20 +65,19 @@ fun goToInstalledAppDetails(context: Context, packageName: String?) {
         )
     }
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    context.startActivity(intent)
+    this.startActivity(intent)
 }
 
 
 /**
  * 获取指定程序信息
  */
-fun getTopRunningTask(context: Context): RunningTaskInfo? {
+fun Context.getTopRunningTask(): RunningTaskInfo? {
     try {
-        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         // 得到当前正在运行的任务栈
-        val runningTasks = am.getRunningTasks(1)
+        val runningTasks = this.activityManager?.getRunningTasks(1)
         // 得到前台显示的任务栈
-        return runningTasks[0]
+        return runningTasks?.get(0)
     } catch (e: Exception) {
         e.printStackTrace()
     }
@@ -86,22 +85,18 @@ fun getTopRunningTask(context: Context): RunningTaskInfo? {
 }
 
 
-fun getAppVersionName(context: Context): String? {
+fun Context.getAppVersionName(): String? {
     try {
-        val pm: PackageManager = context.packageManager
-        val pi: PackageInfo = pm.getPackageInfo(context.packageName, 0)
-        return pi.versionName
+        return this.packageManager?.getPackageInfo(this.packageName, 0)?.versionName
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
     }
     return ""
 }
 
-fun getAppVersionCode(context: Context): Int {
+fun Context.getAppVersionCode(): Int {
     try {
-        val pm: PackageManager = context.packageManager
-        val pi: PackageInfo = pm.getPackageInfo(context.packageName, 0)
-        return pi.versionCode
+        return this.packageManager.getPackageInfo(this.packageName, 0)?.versionCode ?: 0
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
     }
@@ -131,17 +126,11 @@ fun getInstallLocation(): Int {
 /**
  * get app package info
  */
-fun getAppPackageInfo(context: Context?): PackageInfo? {
-    if (context != null) {
-        val pm: PackageManager = context.packageManager
-        if (pm != null) {
-            var pi: PackageInfo
-            try {
-                return pm.getPackageInfo(context.packageName, 0)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+fun Context?.getAppPackageInfo(): PackageInfo? {
+    try {
+        return this?.packageManager?.getPackageInfo(this.packageName, 0)
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
     return null
 }
@@ -150,22 +139,20 @@ fun getAppPackageInfo(context: Context?): PackageInfo? {
  * whether context is system application
  */
 fun isSystemApplication(context: Context?): Boolean {
-    return if (context == null) {
-        false
-    } else isSystemApplication(context, context.packageName)
+    return context?.isSystemApplication(context.packageName) ?: false
 }
 
 /**
  * whether packageName is system application
  */
-fun isSystemApplication(context: Context, packageName: String?): Boolean {
-    val packageManager: PackageManager = context.packageManager
-    if (packageManager == null || packageName == null || packageName.length == 0) {
+fun Context.isSystemApplication(packageName: String?): Boolean {
+    val packageManager: PackageManager? = this.packageManager
+    if (packageManager == null || packageName == null || packageName.isEmpty()) {
         return false
     }
     try {
         val app = packageManager.getApplicationInfo(packageName, 0)
-        return app != null && app.flags and ApplicationInfo.FLAG_SYSTEM > 0
+        return app.flags and ApplicationInfo.FLAG_SYSTEM > 0
     } catch (e: Exception) {
         e.printStackTrace()
     }
@@ -199,9 +186,9 @@ fun isInsatalled(context: Context, pkg: String): Boolean {
 /**
  * 获取指定程序信息
  */
-fun getApplicationInfo(context: Context, pkg: String?): ApplicationInfo? {
+fun Context.getApplicationInfo(pkg: String): ApplicationInfo? {
     try {
-        return context.packageManager.getApplicationInfo(pkg, 0)
+        return this.packageManager.getApplicationInfo(pkg, 0)
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
     }
@@ -211,9 +198,9 @@ fun getApplicationInfo(context: Context, pkg: String?): ApplicationInfo? {
 /**
  * 获取指定程序信息
  */
-fun getPackageInfo(context: Context, pkg: String?): PackageInfo? {
+fun Context.getPackageInfo(pkg: String): PackageInfo? {
     try {
-        return context.packageManager.getPackageInfo(pkg, 0)
+        return this.packageManager.getPackageInfo(pkg, 0)
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
     }
@@ -223,29 +210,27 @@ fun getPackageInfo(context: Context, pkg: String?): PackageInfo? {
 /**
  * 启动应用
  */
-fun startAppByPackageName(context: Context, packageName: String?): Boolean {
-    return startAppByPackageName(context, packageName, null)
+fun Context.startAppByPackageName(packageName: String): Boolean {
+    return startAppByPackageName(packageName, null)
 }
 
 /**
  * 启动应用
  */
-fun startAppByPackageName(
-    context: Context,
-    packageName: String?,
+fun Context.startAppByPackageName(
+    packageName: String,
     param: Map<String?, String?>?
 ): Boolean {
     var pi: PackageInfo? = null
     try {
-        pi = context.packageManager.getPackageInfo(packageName, 0)
+        pi = this.packageManager.getPackageInfo(packageName, 0)
         val resolveIntent = Intent(Intent.ACTION_MAIN, null)
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
             resolveIntent.setPackage(pi.packageName)
         }
-        val apps: List<ResolveInfo> =
-            context.packageManager.queryIntentActivities(resolveIntent, 0)
-        val ri = apps.iterator().next()
+        val apps: List<ResolveInfo>? = this.packageManager.queryIntentActivities(resolveIntent, 0)
+        val ri = apps?.iterator()?.next()
         if (ri != null) {
             val packageName1 = ri.activityInfo.packageName
             val className = ri.activityInfo.name
@@ -259,13 +244,13 @@ fun startAppByPackageName(
                     intent.putExtra(key, value)
                 }
             }
-            context.startActivity(intent)
+            this.startActivity(intent)
             return true
         }
     } catch (e: Exception) {
         e.printStackTrace()
         Toast.makeText(
-            context.applicationContext, "启动失败",
+            this.applicationContext, "启动失败",
             Toast.LENGTH_LONG
         ).show()
     }
