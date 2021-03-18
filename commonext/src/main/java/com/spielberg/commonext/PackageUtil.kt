@@ -103,25 +103,6 @@ fun Context.getAppVersionCode(): Int {
     return -1
 }
 
-/**
- * 获取当前系统安装应用的默认位置
- *
- * @return APP_INSTALL_AUTO or APP_INSTALL_INTERNAL or APP_INSTALL_EXTERNAL.
- */
-fun getInstallLocation(): Int {
-    val commandResult: ShellUtil.CommandResult = ShellUtil.execCommand(
-        "LD_LIBRARY_PATH=/vendor/lib:/system/lib pm get-install-location", false, true
-    )
-    if (commandResult.result === 0 && commandResult.responseMsg != null && commandResult.responseMsg.length() > 0) {
-        try {
-            return commandResult.responseMsg.substring(0, 1).toInt()
-        } catch (e: NumberFormatException) {
-            e.printStackTrace()
-        }
-    }
-    return APP_INSTALL_AUTO
-}
-
 
 /**
  * get app package info
@@ -169,10 +150,10 @@ fun getInsatalledPackages(context: Context): List<PackageInfo> {
 /**
  * 获取已安装的全部应用信息
  */
-fun isInsatalled(context: Context, pkg: String): Boolean {
-    if (!Check.isEmpty(pkg)) {
+fun isInsatalled(context: Context, pkg: String?): Boolean {
+    if (!pkg.isEmptyOrBlankExt()) {
         val list = getInsatalledPackages(context)
-        if (!Check.isEmpty(list)) {
+        if (list.isNotEmpty()) {
             for (pi in list) {
                 if (pkg.equals(pi.packageName, ignoreCase = true)) {
                     return true
