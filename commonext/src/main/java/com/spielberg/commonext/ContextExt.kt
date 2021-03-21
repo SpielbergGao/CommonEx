@@ -7,7 +7,8 @@ import android.text.TextUtils
 
 fun getApplicationByReflect(): Application? {
     val thread: Any? = getActivityThread()
-    val app = "android.app.ActivityThread".getClassInvokeMethodExt("getApplication")?.invoke(thread) ?: return null
+    val app = "android.app.ActivityThread".getClassInvokeMethodExt("getApplication")?.invoke(thread)
+        ?: return null
     return app as Application
 }
 
@@ -43,4 +44,16 @@ fun Context.checkAccessibilityServiceEnabled(serviceName: String): Boolean {
         }
     }
     return result
+}
+
+fun Context.isRunningService(className: String, maxNum: Int = 1000): Boolean {
+    val runningServices = this.activityManager?.getRunningServices(maxNum)
+    if (runningServices.isNullOrEmpty()) return false
+    for (runningServiceInfo in runningServices) {
+        val service = runningServiceInfo.service
+        if (className == service.className) {
+            return true
+        }
+    }
+    return false
 }
