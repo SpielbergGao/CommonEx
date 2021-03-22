@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
@@ -14,8 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import java.util.function.Consumer
 
 const val IMPORTANCE_UNSPECIFIED = -1000
@@ -33,9 +30,8 @@ const val IMPORTANCE_HIGH = 4
     IMPORTANCE_DEFAULT,
     IMPORTANCE_HIGH
 )
-@Retention(
-    RetentionPolicy.SOURCE
-)
+
+@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class Importance
 
 /**
@@ -171,11 +167,12 @@ fun setNotificationBarVisibility(isVisible: Boolean) {
     invokePanels(methodName)
 }
 
+@SuppressLint("WrongConstant")
 private fun invokePanels(methodName: String) {
     try {
-        @SuppressLint("WrongConstant") val service: Any? =
+        val service: Any? =
             getApplicationByReflect()?.getSystemService("statusbar")
-        @SuppressLint("PrivateApi") val statusBarManager =
+        val statusBarManager =
             Class.forName("android.app.StatusBarManager")
         val expand = statusBarManager.getMethod(methodName)
         expand.invoke(service)
