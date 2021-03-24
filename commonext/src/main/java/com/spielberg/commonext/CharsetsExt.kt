@@ -2,12 +2,12 @@ package com.spielberg.commonext
 
 import java.nio.charset.Charset
 
-fun toCharset(charset: Charset?): Charset? {
-    return charset ?: Charset.defaultCharset()
+fun Charset?.toCharset(): Charset? {
+    return this ?: Charset.defaultCharset()
 }
 
-fun toCharset(charset: String?): Charset? {
-    return if (charset == null) Charset.defaultCharset() else Charset.forName(charset)
+fun String?.toCharset(): Charset? {
+    return if (this.isEmptyOrBlankExt()) Charset.defaultCharset() else Charset.forName(this)
 }
 
 val ISO_8859_1: Charset = Charset.forName("ISO-8859-1")
