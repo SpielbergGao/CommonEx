@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.spielberg.commonext.handlers.LifecycleHandler
 
-inline fun <reified T> Fragment.start(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null) {
+inline fun <reified T> Fragment.start(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null) {
     val intent = Intent(activity, T::class.java).apply {
         if (flag != -1) {
             this.addFlags(flag)
@@ -18,7 +18,7 @@ inline fun <reified T> Fragment.start(flag: Int = -1, bundle: Array<out Pair<Str
     startActivity(intent)
 }
 
-inline fun <reified T> Fragment.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null, requestCode: Int = -1) {
+inline fun <reified T> Fragment.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null, requestCode: Int = -1) {
     val intent = Intent(activity, T::class.java).apply {
         if (flag != -1) {
             this.addFlags(flag)
@@ -28,7 +28,7 @@ inline fun <reified T> Fragment.startForResult(flag: Int = -1, bundle: Array<out
     startActivityForResult(intent, requestCode)
 }
 
-inline fun <reified T> Context.startActivity(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null) {
+inline fun <reified T> Context.startActivity(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null) {
     val intent = Intent(this, T::class.java).apply {
         if (flag != -1) {
             this.addFlags(flag)
@@ -41,15 +41,15 @@ inline fun <reified T> Context.startActivity(flag: Int = -1, bundle: Array<out P
     startActivity(intent)
 }
 
-inline fun <reified T> View.startActivity(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null) {
+inline fun <reified T> View.startActivity(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null) {
     context.startActivity<T>(flag, bundle)
 }
 
-inline fun <reified T> View.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null, requestCode: Int = -1) {
+inline fun <reified T> View.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null, requestCode: Int = -1) {
     (context as Activity).startForResult<T>(flag, bundle, requestCode)
 }
 
-inline fun <reified T> Activity.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any?>>? = null, requestCode: Int = -1) {
+inline fun <reified T> Activity.startForResult(flag: Int = -1, bundle: Array<out Pair<String, Any>>? = null, requestCode: Int = -1) {
     val intent = Intent(this, T::class.java).apply {
         if (flag != -1) {
             this.addFlags(flag)
