@@ -49,8 +49,8 @@ fun File?.installApp() {
  *
  * @param uri The uri.
  */
-fun installApp(uri: Uri?) {
-    val installAppIntent: Intent = uri?.getInstallAppIntent() ?: return
+fun Uri?.installApp() {
+    val installAppIntent: Intent = this?.getInstallAppIntent() ?: return
     getApplicationByReflect()?.startActivity(installAppIntent)
 }
 
@@ -141,8 +141,8 @@ fun String?.isAppSystem(): Boolean {
  * @param pkgName The name of the package.
  * @return `true`: yes<br></br>`false`: no
  */
-fun isAppForeground(pkgName: String?): Boolean {
-    return !pkgName.isEmptyOrBlankExt() && pkgName == getForegroundProcessName()
+fun String?.isAppForeground(): Boolean {
+    return !this.isEmptyOrBlankExt() && this == getForegroundProcessName()
 }
 
 /**
@@ -480,12 +480,12 @@ fun String?.getAppSignatures(): Array<Signature>? {
  * @param file The file.
  * @return the application's signature
  */
-fun getAppSignatures(file: File?): Array<Signature?>? {
-    if (file == null) return null
+fun  File?.getAppSignatures(): Array<Signature?>? {
+    if (this == null) return null
     val pm: PackageManager? = getApplicationByReflect()?.packageManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val pi =
-            pm?.getPackageArchiveInfo(file.absolutePath, PackageManager.GET_SIGNING_CERTIFICATES)
+            pm?.getPackageArchiveInfo(this.absolutePath, PackageManager.GET_SIGNING_CERTIFICATES)
                 ?: return null
         val signingInfo = pi.signingInfo
         return if (signingInfo.hasMultipleSigners()) {
@@ -494,7 +494,7 @@ fun getAppSignatures(file: File?): Array<Signature?>? {
             signingInfo.signingCertificateHistory
         }
     } else {
-        val pi = pm?.getPackageArchiveInfo(file.absolutePath, PackageManager.GET_SIGNATURES)
+        val pi = pm?.getPackageArchiveInfo(this.absolutePath, PackageManager.GET_SIGNATURES)
             ?: return null
         return pi.signatures
     }
@@ -661,8 +661,8 @@ fun getAppsInfo(): List<AppInfo>? {
  *
  * @return the application's package information
  */
-fun getApkInfo(apkFile: File?): AppInfo? {
-    return if ((apkFile == null) || !apkFile.isFile || !apkFile.exists()) null else apkFile.absolutePath.getApkInfo()
+fun File?.getApkInfo(): AppInfo? {
+    return if ((this == null) || !this.isFile || !this.exists()) null else this.absolutePath.getApkInfo()
 }
 
 /**
