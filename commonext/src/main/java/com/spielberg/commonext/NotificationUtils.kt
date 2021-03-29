@@ -31,7 +31,7 @@ const val IMPORTANCE_HIGH = 4
     IMPORTANCE_HIGH
 )
 
-@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.SOURCE)
 annotation class Importance
 
 /**
