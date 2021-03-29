@@ -1,6 +1,7 @@
 package com.spielberg.commonext
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,6 +23,7 @@ import java.util.*
  * @param intent The intent.
  * @return `true`: yes<br></br>`false`: no
  */
+@SuppressLint("QueryPermissionsNeeded")
 fun Intent.isIntentAvailable(): Boolean {
     val context = getApplicationByReflect() ?: return false
     return context.packageManager.queryIntentActivities(
@@ -260,12 +262,10 @@ fun getShareTextImageIntent(
     imagePaths: LinkedList<String>?
 ): Intent? {
     val files: MutableList<File> = ArrayList()
-    if (imagePaths != null) {
-        for (imagePath in imagePaths) {
-            val file: File? = imagePath.getFileByPathExt()
-            if (file != null) {
-                files.add(file)
-            }
+    imagePaths?.forEach {
+        val file = it.getFileByPathExt()
+        file?.run {
+            files.add(this)
         }
     }
     return getShareTextImageIntent(content, files)
@@ -280,12 +280,10 @@ fun getShareTextImageIntent(
  */
 fun getShareTextImageIntent(content: String?, images: List<File>?): Intent? {
     val uris = ArrayList<Uri>()
-    if (images != null) {
-        for (image in images) {
-            val uri: Uri? = image?.file2UriExt()
-            if (uri != null) {
-                uris.add(uri)
-            }
+    images?.forEach {
+        val uri = it.file2UriExt()
+        uri?.run {
+            uris.add(this)
         }
     }
     return getShareTextImageIntent(content, uris)
@@ -465,14 +463,15 @@ private fun getIntent(intent: Intent, isNewTask: Boolean): Intent? {
  * @param pkg The name of the package.
  * @return the name of launcher activity
  */
-fun String?.getLauncherActivity( ): String? {
+@SuppressLint("QueryPermissionsNeeded")
+fun String?.getLauncherActivity(): String? {
     if (this.isEmptyOrBlankExt()) return ""
     val intent = Intent(Intent.ACTION_MAIN, null)
     intent.addCategory(Intent.CATEGORY_LAUNCHER)
     intent.setPackage(this)
     val pm: PackageManager? = getApplicationByReflect()?.packageManager
     val info = pm?.queryIntentActivities(intent, 0)
-    return if (info == null || info.size == 0) {
+    return if (info.isNullOrEmpty()) {
         ""
     } else info[0].activityInfo.name
 }
