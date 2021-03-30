@@ -1,6 +1,5 @@
 package com.spielberg.commonext
 
-import android.app.ActivityManager
 import android.app.ActivityManager.RunningTaskInfo
 import android.content.ComponentName
 import android.content.Context

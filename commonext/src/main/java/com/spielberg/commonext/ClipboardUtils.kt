@@ -1,9 +1,7 @@
 package com.spielberg.commonext
 
 import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.ClipboardManager.OnPrimaryClipChangedListener
-import android.content.Context
 
 
 /**
