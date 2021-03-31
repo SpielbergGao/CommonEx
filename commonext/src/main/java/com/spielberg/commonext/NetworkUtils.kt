@@ -15,8 +15,8 @@ import androidx.annotation.RequiresPermission
  * @return network info
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
-fun getNetworkInfo(context: Context): NetworkInfo? {
-    return context.connectivityManager?.activeNetworkInfo
+fun Context.getNetworkInfo(): NetworkInfo? {
+    return this.connectivityManager?.activeNetworkInfo
 }
 
 /**
@@ -26,8 +26,8 @@ fun getNetworkInfo(context: Context): NetworkInfo? {
  * @return boolean boolean
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
-fun isConnected(context: Context): Boolean {
-    val info = getNetworkInfo(context)
+fun Context.isConnected(): Boolean {
+    val info = this.getNetworkInfo()
     return info != null && info.isConnected
 }
 
@@ -38,8 +38,8 @@ fun isConnected(context: Context): Boolean {
  * @return boolean boolean
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
-fun isConnectedFast(context: Context): Boolean {
-    val info = getNetworkInfo(context)
+fun Context.isConnectedFast(): Boolean {
+    val info = this.getNetworkInfo()
     return info != null && info.isConnected && isConnectionFast(
         info.type,
         info.subtype
@@ -53,8 +53,8 @@ fun isConnectedFast(context: Context): Boolean {
  * @return boolean boolean
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
-fun isConnectedMobile(context: Context): Boolean {
-    val info = getNetworkInfo(context)
+fun Context.isConnectedMobile(): Boolean {
+    val info = this.getNetworkInfo()
     return (info != null && info.isConnected
             && info.type == ConnectivityManager.TYPE_MOBILE)
 }
@@ -66,8 +66,8 @@ fun isConnectedMobile(context: Context): Boolean {
  * @return boolean boolean
  */
 @RequiresPermission(permission.ACCESS_NETWORK_STATE)
-fun isConnectedWifi(context: Context): Boolean {
-    val info = getNetworkInfo(context)
+fun Context.isConnectedWifi(): Boolean {
+    val info = this.getNetworkInfo()
     return info != null && info.isConnected && info.type == ConnectivityManager.TYPE_WIFI
 }
 
