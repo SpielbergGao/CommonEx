@@ -29,12 +29,9 @@ fun getLaunchAppDetailsSettingsIntent(pkgName: String?, isNewTask: Boolean): Int
     return getLaunchAppDetailsSettingsIntent(pkgName, isNewTask)
 }
 
-fun isIntentAvailable(intent: Intent?): Boolean {
-    return isIntentAvailable(intent)
-}
-
-fun getLaunchAppIntent(pkgName: String?): Intent? {
-    return getLaunchAppIntent(pkgName)
+fun Intent?.isIntentAvailable(): Boolean {
+    if (this == null) return false
+    return this.isIntentAvailable()
 }
 
 fun getForegroundProcessName(): String? {
@@ -67,9 +64,15 @@ fun Array<out Pair<String, Any?>>.toBundle(): Bundle? {
                 is BooleanArray -> putBooleanArray(it.first, value)
 
                 is Array<*> -> when {
-                    value.isArrayOf<CharSequence>() -> putCharSequenceArray(it.first, value as Array<CharSequence>)
+                    value.isArrayOf<CharSequence>() -> putCharSequenceArray(
+                        it.first,
+                        value as Array<CharSequence>
+                    )
                     value.isArrayOf<String>() -> putStringArray(it.first, value as Array<String>)
-                    value.isArrayOf<Parcelable>() -> putParcelableArray(it.first, value as Array<Parcelable>)
+                    value.isArrayOf<Parcelable>() -> putParcelableArray(
+                        it.first,
+                        value as Array<Parcelable>
+                    )
                 }
             }
         }
