@@ -39,14 +39,13 @@ object TextViewUtils {
             try {
                 return view as T
             } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "getTextView")
+                e.printStackTrace()
             }
         }
         return null
     }
-    // ========
-    // = Hint =
-    // ========
+
+
     /**
      * 获取 Hint 文本
      * @param textView [TextView]
@@ -2034,8 +2033,8 @@ object TextViewUtils {
      * @param <T>  泛型
      * @return [Paint]
     </T> */
-    fun <T : TextView?> getPaint(view: View?): Paint? {
-        return getPaint(getTextView<TextView>(view))
+    fun TextView?.getPaint(view: View?): Paint? {
+        return getTextView<TextView>(view)?.paint
     }
 
     /**
@@ -2044,8 +2043,8 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [Paint]
     </T> */
-    fun <T : TextView?> getPaint(textView: T?): Paint? {
-        return textView?.paint
+    fun TextView?.getPaint(): Paint? {
+        return this?.paint
     }
 
     /**
@@ -2054,8 +2053,8 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return 字体高度
     </T> */
-    fun <T : TextView?> getTextHeight(textView: T): Int {
-        return getTextHeight(getPaint(textView))
+    fun TextView?.getTextHeight(): Int {
+        return getTextHeight(this?.paint)
     }
 
     /**
@@ -2072,15 +2071,15 @@ object TextViewUtils {
         }
         return -1
     }
-    // =
+
     /**
      * 获取字体顶部偏移高度
      * @param textView [TextView]
      * @param <T>      泛型
      * @return 字体顶部偏移高度
     </T> */
-    fun <T : TextView?> getTextTopOffsetHeight(textView: T): Int {
-        return getTextTopOffsetHeight(getPaint(textView))
+    fun TextView?.getTextTopOffsetHeight(): Int {
+        return getTextTopOffsetHeight(getPaint(this))
     }
 
     /**
@@ -2098,7 +2097,7 @@ object TextViewUtils {
         }
         return -1
     }
-    // =
+
     /**
      * 计算字体宽度
      * @param textView [TextView]
@@ -2106,11 +2105,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return 字体宽度
     </T> */
-    fun <T : TextView?> getTextWidth(
-        textView: T,
+    fun TextView?.getTextWidth(
         text: String?
     ): Float {
-        return getTextWidth(getPaint(textView), text)
+        return getTextWidth(getPaint(this), text)
     }
 
     /**
@@ -2119,8 +2117,8 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return 字体宽度
     </T> */
-    fun <T : TextView?> getTextWidth(textView: T): Float {
-        return getTextWidth(getPaint(textView), getText(textView))
+    fun TextView?.getTextWidth(): Float {
+        return getTextWidth(getPaint(this), getText(this))
     }
 
     /**
@@ -2188,7 +2186,7 @@ object TextViewUtils {
     ): Float {
         return getTextWidth(getPaint<TextView>(view), text, start, end)
     }
-    // =
+
     /**
      * 计算字体宽度
      * @param paint [TextView.getPaint]
@@ -2207,7 +2205,7 @@ object TextViewUtils {
             try {
                 return paint.measureText(text, start, end)
             } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "getTextWidth")
+                e.printStackTrace()
             }
         }
         return -1f
@@ -2231,7 +2229,7 @@ object TextViewUtils {
             try {
                 return paint.measureText(text, start, end)
             } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "getTextWidth")
+                e.printStackTrace()
             }
         }
         return -1f
@@ -2255,12 +2253,12 @@ object TextViewUtils {
             try {
                 return paint.measureText(text, start, end)
             } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "getTextWidth")
+                e.printStackTrace()
             }
         }
         return -1f
     }
-    // =
+
     /**
      * 获取画布中间居中位置
      * @param targetRect [Rect] 目标坐标
@@ -2280,12 +2278,7 @@ object TextViewUtils {
         }
         return -1
     }
-    /**
-     * 通过需要的高度, 计算字体大小
-     * @param height    需要的高度
-     * @param startSize 字体开始预估大小
-     * @return 字体大小
-     */
+
     /**
      * 通过需要的高度, 计算字体大小
      * @param height 需要的高度
@@ -2335,13 +2328,7 @@ object TextViewUtils {
             }
         }
     }
-    /**
-     * 通过需要的宽度, 计算字体大小 ( 最接近该宽度的字体大小 )
-     * @param width    需要的宽度
-     * @param textView [TextView]
-     * @param content  待计算内容
-     * @return 字体大小
-     */
+
     /**
      * 通过需要的宽度, 计算字体大小 ( 最接近该宽度的字体大小 )
      * @param width    需要的宽度
@@ -2395,7 +2382,7 @@ object TextViewUtils {
         content: String?
     ): Float {
         if (paint == null || width <= 0 || curTextSize <= 0 || content == null) return 0f
-        if (StringUtils.isEmpty(content)) return curTextSize
+        if (content.isNullOrEmpty()) return curTextSize
         // 初始化内容画笔, 计算宽高
         val tvPaint = TextPaint(paint)
         // 字体大小
@@ -2432,7 +2419,7 @@ object TextViewUtils {
             }
         }
     }
-    // =
+
     /**
      * 计算第几位超过宽度
      * @param textView [TextView]
@@ -2441,12 +2428,11 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return -1 表示没超过, 其他值表示对应的索引位置
     </T> */
-    fun <T : TextView?> calcTextWidth(
-        textView: T,
+    fun TextView?.calcTextWidth(
         text: String?,
         width: Float
     ): Int {
-        return calcTextWidth(getPaint(textView), text, width)
+        return calcTextWidth(getPaint(this), text, width)
     }
 
     /**
@@ -2456,11 +2442,8 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return -1 表示没超过, 其他值表示对应的索引位置
     </T> */
-    fun <T : TextView?> calcTextWidth(
-        textView: T,
-        width: Float
-    ): Int {
-        return calcTextWidth(getPaint(textView), getText(textView), width)
+    fun TextView?.calcTextWidth(width: Float): Int {
+        return calcTextWidth(getPaint(this), getText(this), width)
     }
 
     /**
@@ -2522,12 +2505,11 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return 行数
     </T> */
-    fun <T : TextView?> calcTextLine(
-        textView: T,
+    fun TextView?.calcTextLine(
         text: String?,
         width: Float
     ): Int {
-        return calcTextLine(getPaint(textView), text, width)
+        return calcTextLine(getPaint(this), text, width)
     }
 
     /**
@@ -2537,11 +2519,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return 行数
     </T> */
-    fun <T : TextView?> calcTextLine(
-        textView: T,
+    fun TextView?.calcTextLine(
         width: Float
     ): Int {
-        return calcTextLine(getPaint(textView), getText(textView), width)
+        return calcTextLine(getPaint(this), getText(this), width)
     }
 
     /**
@@ -2566,29 +2547,6 @@ object TextViewUtils {
         }
         return 0
     }
-    // =====================
-    // = CompoundDrawables =
-    // =====================
-    /**
-     * 获取 CompoundDrawables
-     * @param textView [TextView]
-     * @param <T>      泛型
-     * @return Drawable[] { left, top, right, bottom }
-    </T> */
-    fun <T : TextView?> getCompoundDrawables(textView: T?): Array<Drawable?> {
-        return textView?.compoundDrawables
-            ?: arrayOf(null, null, null, null)
-    }
-
-    /**
-     * 获取 CompoundDrawables Padding
-     * @param textView [TextView]
-     * @param <T>      泛型
-     * @return CompoundDrawables Padding
-    </T> */
-    fun <T : TextView?> getCompoundDrawablePadding(textView: T?): Int {
-        return textView?.compoundDrawablePadding ?: 0
-    }
 
     /**
      * 设置 CompoundDrawables Padding
@@ -2597,13 +2555,12 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablePadding(
-        textView: T?,
+    fun TextView?.setCompoundDrawablePadding(
         padding: Int
-    ): T? {
-        if (textView != null) textView.compoundDrawablePadding = padding
-        return textView
+    ) {
+        this?.compoundDrawablePadding = padding
     }
+
     // ========================
     // = setCompoundDrawables =
     // ========================
@@ -2614,11 +2571,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesByLeft(
-        textView: T,
+    fun TextView?.setCompoundDrawablesByLeft(
         left: Drawable?
-    ): T {
-        return setCompoundDrawables(textView, left, null, null, null)
+    ) {
+        this?.setCompoundDrawables(left, null, null, null)
     }
 
     /**
@@ -2628,11 +2584,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesByTop(
-        textView: T,
+    fun TextView?.setCompoundDrawablesByTop(
         top: Drawable?
-    ): T {
-        return setCompoundDrawables(textView, null, top, null, null)
+    ) {
+        this?.setCompoundDrawables(null, top, null, null)
     }
 
     /**
@@ -2642,11 +2597,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesByRight(
-        textView: T,
+    fun TextView?.setCompoundDrawablesByRight(
         right: Drawable?
-    ): T {
-        return setCompoundDrawables(textView, null, null, right, null)
+    ) {
+        this?.setCompoundDrawables(null, null, right, null)
     }
 
     /**
@@ -2656,11 +2610,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesByBottom(
-        textView: T,
+    fun TextView?.setCompoundDrawablesByBottom(
         bottom: Drawable?
-    ): T {
-        return setCompoundDrawables(textView, null, null, null, bottom)
+    ) {
+        this?.setCompoundDrawables(null, null, null, bottom)
     }
 
     /**
@@ -2678,21 +2631,13 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawables(
-        textView: T?,
+    fun TextView?.setCompoundDrawables(
         left: Drawable?,
         top: Drawable?,
         right: Drawable?,
         bottom: Drawable?
-    ): T? {
-        if (textView != null) {
-            try {
-                textView.setCompoundDrawables(left, top, right, bottom)
-            } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "setCompoundDrawables")
-            }
-        }
-        return textView
+    ) {
+        this?.setCompoundDrawables(left, top, right, bottom)
     }
     // ===========================================
     // = setCompoundDrawablesWithIntrinsicBounds =
@@ -2704,11 +2649,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesWithIntrinsicBoundsByLeft(
-        textView: T,
+    fun TextView?.setCompoundDrawablesWithIntrinsicBoundsByLeft(
         left: Drawable?
-    ): T {
-        return setCompoundDrawablesWithIntrinsicBounds(textView, left, null, null, null)
+    ) {
+        this?.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
     }
 
     /**
@@ -2718,11 +2662,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesWithIntrinsicBoundsByTop(
-        textView: T,
+    fun TextView?.setCompoundDrawablesWithIntrinsicBoundsByTop(
         top: Drawable?
-    ): T {
-        return setCompoundDrawablesWithIntrinsicBounds(textView, null, top, null, null)
+    ) {
+        this?.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
     }
 
     /**
@@ -2732,11 +2675,10 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesWithIntrinsicBoundsByRight(
-        textView: T,
+    fun TextView?.setCompoundDrawablesWithIntrinsicBoundsByRight(
         right: Drawable?
-    ): T {
-        return setCompoundDrawablesWithIntrinsicBounds(textView, null, null, right, null)
+    ) {
+        this?.setCompoundDrawablesWithIntrinsicBounds(null, null, right, null)
     }
 
     /**
@@ -2746,37 +2688,18 @@ object TextViewUtils {
      * @param <T>      泛型
      * @return [View]
     </T> */
-    fun <T : TextView?> setCompoundDrawablesWithIntrinsicBoundsByBottom(
-        textView: T,
+    fun TextView?.setCompoundDrawablesWithIntrinsicBoundsByBottom(
         bottom: Drawable?
-    ): T {
-        return setCompoundDrawablesWithIntrinsicBounds(textView, null, null, null, bottom)
+    ) {
+        this?.setCompoundDrawablesWithIntrinsicBounds(null, null, null, bottom)
     }
 
-    /**
-     * 设置 CompoundDrawables ( 按照原有比例大小显示图片 )
-     * @param textView [TextView]
-     * @param left     left Drawable
-     * @param top      top Drawable
-     * @param right    right Drawable
-     * @param bottom   bottom Drawable
-     * @param <T>      泛型
-     * @return [View]
-    </T> */
-    fun <T : TextView?> setCompoundDrawablesWithIntrinsicBounds(
-        textView: T?,
+    fun TextView?.setCompoundDrawablesWithIntrinsicBounds(
         left: Drawable?,
         top: Drawable?,
         right: Drawable?,
         bottom: Drawable?
-    ): T? {
-        if (textView != null) {
-            try {
-                textView.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
-            } catch (e: Exception) {
-                LogPrintUtils.eTag(TAG, e, "setCompoundDrawablesWithIntrinsicBounds")
-            }
-        }
-        return textView
+    ) {
+        this?.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
     }
 }
