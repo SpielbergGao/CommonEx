@@ -152,12 +152,10 @@ fun setHintTextColor(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setHintTextColor(
-    textView: T?,
+fun TextView?.setHintTextColor(
     colors: ColorStateList?
-): T? {
-    textView?.setHintTextColor(colors)
-    return textView
+) {
+    this?.setHintTextColor(colors)
 }
 
 /**
