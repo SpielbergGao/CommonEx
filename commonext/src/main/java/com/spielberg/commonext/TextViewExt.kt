@@ -23,46 +23,17 @@ import java.util.*
 
 
 /**
- * 获取 Hint 文本
- * @param view [TextView]
- * @return [TextView.getHint]
- */
-fun getHint(view: View?): String? {
-    return getHint(getTextView<TextView>(view))
-}
-
-/**
- * 获取多个 TextView Hint 文本
- * @param views View(TextView)[]
- * @return [<] 多个 TextView Hint 文本
- */
-fun getHints(vararg views: View?): List<String> {
-    val lists: MutableList<String> = ArrayList()
-    if (views != null) {
-        for (view in views) {
-            val text = getHint(view)
-            if (text != null) {
-                lists.add(text)
-            }
-        }
-    }
-    return lists
-}
-
-/**
  * 获取多个 TextView Hint 文本
  * @param views TextView[]
  * @param <T>   泛型
  * @return [<] 多个 TextView Hint 文本
 </T> */
-fun <T : TextView?> getHints(vararg views: T): List<String> {
+fun getHints(vararg views: TextView?): List<String> {
     val lists: MutableList<String> = ArrayList()
-    if (views != null) {
-        for (view in views) {
-            val text = getHint(view)
-            if (text != null) {
-                lists.add(text)
-            }
+    for (view in views) {
+        val text = view?.hint
+        if (text != null) {
+            lists.add(text.toString())
         }
     }
     return lists
@@ -75,28 +46,10 @@ fun <T : TextView?> getHints(vararg views: T): List<String> {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setHint(
-    textView: T?,
+fun TextView?.setHint(
     text: CharSequence?
-): T? {
-    if (textView != null) {
-        textView.hint = text
-    }
-    return textView
-}
-
-/**
- * 设置 Hint 文本
- * @param view [TextView]
- * @param text Hint text
- * @return [View]
- */
-fun setHint(
-    view: View?,
-    text: CharSequence?
-): View? {
-    setHint(view?.getTextView<TextView>(), text)
-    return view
+) {
+    this?.hint = text
 }
 
 /**
@@ -105,17 +58,8 @@ fun setHint(
  * @param <T>      泛型
  * @return [ColorStateList]
 </T> */
-fun <T : TextView?> getHintTextColors(textView: T?): ColorStateList? {
-    return textView?.hintTextColors
-}
-
-/**
- * 获取 Hint 字体颜色
- * @param view [TextView]
- * @return [ColorStateList]
- */
-fun getHintTextColors(view: View?): ColorStateList? {
-    return getHintTextColors(getTextView<TextView>(view))
+fun TextView?.getHintTextColors(): ColorStateList? {
+    return this?.hintTextColors
 }
 
 /**
@@ -133,20 +77,6 @@ fun TextView?.setHintTextColor(
 
 /**
  * 设置 Hint 字体颜色
- * @param view  [TextView]
- * @param color R.color.id
- * @return [View]
- */
-fun setHintTextColor(
-    view: View?,
-    @ColorInt color: Int
-): View? {
-    setHintTextColor(getTextView<TextView>(view), color)
-    return view
-}
-
-/**
- * 设置 Hint 字体颜色
  * @param textView [TextView]
  * @param colors   [ColorStateList]
  * @param <T>      泛型
@@ -159,75 +89,20 @@ fun TextView?.setHintTextColor(
 }
 
 /**
- * 设置 Hint 字体颜色
- * @param view   [TextView]
- * @param colors [ColorStateList]
- * @return [View]
- */
-fun setHintTextColor(
-    view: View?,
-    colors: ColorStateList?
-): View? {
-    setHintTextColor(getTextView<TextView>(view), colors)
-    return view
-}
-
-/**
- * 设置多个 TextView Hint 字体颜色
- * @param color R.color.id
- * @param views View(TextView)[]
- * @return `true` success, `false` fail
- */
-fun setHintTextColors(
-    @ColorInt color: Int,
-    vararg views: View?
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setHintTextColor(view, color)
-        }
-        return true
-    }
-    return false
-}
-
-/**
  * 设置多个 TextView Hint 字体颜色
  * @param color R.color.id
  * @param views TextView[]
  * @param <T>   泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setHintTextColors(
-    @ColorInt color: Int,
-    vararg views: T
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setHintTextColor(view, color)
-        }
-        return true
-    }
-    return false
-}
-
-/**
- * 设置多个 TextView Hint 字体颜色
- * @param colors [ColorStateList]
- * @param views  View(TextView)[]
- * @return `true` success, `false` fail
- */
 fun setHintTextColors(
-    colors: ColorStateList?,
-    vararg views: View?
+    @ColorInt color: Int,
+    vararg views: TextView?
 ): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setHintTextColor(view, colors)
-        }
-        return true
+    for (view in views) {
+        view?.setHintTextColor(color)
     }
-    return false
+    return true
 }
 
 /**
@@ -237,56 +112,24 @@ fun setHintTextColors(
  * @param <T>    泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setHintTextColors(
+fun setHintTextColors(
     colors: ColorStateList?,
-    vararg views: T
+    vararg views: TextView
 ): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setHintTextColor(view, colors)
-        }
-        return true
+    for (view in views) {
+        view.setHintTextColor(colors)
     }
-    return false
+    return true
 }
-// ========
-// = Text =
-// ========
+
 /**
  * 获取文本
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [TextView.getText]
 </T> */
-fun <T : TextView?> getText(textView: T?): String? {
-    return textView?.text?.toString()
-}
-
-/**
- * 获取文本
- * @param view [TextView]
- * @return [TextView.getText]
- */
-fun getText(view: View?): String? {
-    return getText(getTextView<TextView>(view))
-}
-
-/**
- * 获取多个 TextView 文本
- * @param views View(TextView)[]
- * @return [<] 多个 TextView 文本
- */
-fun getTexts(vararg views: View?): List<String> {
-    val lists: MutableList<String> = ArrayList()
-    if (views != null) {
-        for (view in views) {
-            val text = getText(view)
-            if (text != null) {
-                lists.add(text)
-            }
-        }
-    }
-    return lists
+fun TextView?.getText(): String? {
+    return this?.text?.toString()
 }
 
 /**
@@ -295,14 +138,12 @@ fun getTexts(vararg views: View?): List<String> {
  * @param <T>   泛型
  * @return [<] 多个 TextView 文本
 </T> */
-fun <T : TextView?> getTexts(vararg views: T): List<String> {
+fun getTexts(vararg views: TextView): List<String> {
     val lists: MutableList<String> = ArrayList()
-    if (views != null) {
-        for (view in views) {
-            val text = getText(view)
-            if (text != null) {
-                lists.add(text)
-            }
+    for (view in views) {
+        val text = view.text
+        if (text != null) {
+            lists.add(text.toString())
         }
     }
     return lists
@@ -1733,13 +1574,11 @@ fun setMaxLength(
  * @param <T>       泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setMaxLengthAndText(
-    textView: T,
+fun TextView?.setMaxLengthAndText(
     content: CharSequence?,
     maxLength: Int
-): T {
-    setText(setMaxLength(textView, maxLength), content)
-    return textView
+) {
+    setText(setMaxLength(this, maxLength), content)
 }
 
 /**
@@ -1756,16 +1595,6 @@ fun setMaxLengthAndText(
 ): View? {
     return setText(setMaxLength(view, maxLength), content)
 }
-// =
-/**
- * 获取 Ellipsize 效果
- * @param textView [TextView]
- * @param <T>      泛型
- * @return Ellipsize 效果
-</T> */
-fun <T : TextView?> getEllipsize(textView: T?): TruncateAt? {
-    return textView?.ellipsize
-}
 
 /**
  * 设置 Ellipsize 效果
@@ -1774,30 +1603,12 @@ fun <T : TextView?> getEllipsize(textView: T?): TruncateAt? {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setEllipsize(
-    textView: T?,
+fun TextView?.setEllipsize(
     where: TruncateAt?
-): T? {
-    if (textView != null) {
-        textView.ellipsize = where
-    }
-    return textView
+) {
+    this?.ellipsize = where
 }
 
-/**
- * 设置 Ellipsize 效果
- * @param view  [TextView]
- * @param where [TextUtils.TruncateAt]
- * @return [View]
- */
-fun setEllipsize(
-    view: View?,
-    where: TruncateAt?
-): View? {
-    setEllipsize(getTextView<TextView>(view), where)
-    return view
-}
-// =
 /**
  * 获取自动识别文本类型
  * @param textView [TextView]
@@ -1815,30 +1626,12 @@ fun <T : TextView?> getAutoLinkMask(textView: T?): Int {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setAutoLinkMask(
-    textView: T?,
+fun TextView?.setAutoLinkMask(
     mask: Int
-): T? {
-    if (textView != null) {
-        textView.autoLinkMask = mask
-    }
-    return textView
+) {
+    this?.autoLinkMask = mask
 }
 
-/**
- * 设置自动识别文本链接
- * @param view [TextView]
- * @param mask [android.text.util.Linkify]
- * @return [View]
- */
-fun setAutoLinkMask(
-    view: View?,
-    mask: Int
-): View? {
-    setAutoLinkMask(getTextView<TextView>(view), mask)
-    return view
-}
-// =
 /**
  * 设置文本全为大写
  * @param textView [TextView]
@@ -1846,79 +1639,20 @@ fun setAutoLinkMask(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setAllCaps(
-    textView: T?,
+fun TextView?.setAllCaps(
     allCaps: Boolean
-): T? {
-    if (textView != null) {
-        textView.isAllCaps = allCaps
-    }
-    return textView
+) {
+    this?.isAllCaps = allCaps
 }
 
-/**
- * 设置文本全为大写
- * @param view    [TextView]
- * @param allCaps 是否全部大写
- * @return [View]
- */
-fun setAllCaps(
-    view: View?,
-    allCaps: Boolean
-): View? {
-    setAllCaps(getTextView<TextView>(view), allCaps)
-    return view
-}
-// =
-/**
- * 获取 Gravity
- * @param textView [TextView]
- * @param <T>      泛型
- * @return [android.view.Gravity]
-</T> */
-fun <T : TextView?> getGravity(textView: T?): Int {
-    return textView?.gravity ?: 0
-}
-
-/**
- * 设置 Gravity
- * @param textView [TextView]
- * @param gravity  [android.view.Gravity]
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun <T : TextView?> setGravity(
-    textView: T?,
-    gravity: Int
-): T? {
-    if (textView != null) {
-        textView.gravity = gravity
-    }
-    return textView
-}
-
-/**
- * 设置 Gravity
- * @param view    [TextView]
- * @param gravity [android.view.Gravity]
- * @return [View]
- */
-fun setGravity(
-    view: View?,
-    gravity: Int
-): View? {
-    setGravity(getTextView<TextView>(view), gravity)
-    return view
-}
-// =
 /**
  * 获取文本视图显示转换
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [TransformationMethod]
 </T> */
-fun <T : TextView?> getTransformationMethod(textView: T?): TransformationMethod? {
-    return textView?.transformationMethod
+fun TextView?.getTransformationMethod(): TransformationMethod? {
+    return this?.transformationMethod
 }
 
 /**
@@ -1928,30 +1662,12 @@ fun <T : TextView?> getTransformationMethod(textView: T?): TransformationMethod?
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTransformationMethod(
-    textView: T?,
+fun TextView?.setTransformationMethod(
     method: TransformationMethod?
-): T? {
-    if (textView != null) {
-        textView.transformationMethod = method
-    }
-    return textView
+) {
+    this?.transformationMethod = method
 }
 
-/**
- * 设置文本视图显示转换
- * @param view   [TextView]
- * @param method [TransformationMethod]
- * @return [View]
- */
-fun setTransformationMethod(
-    view: View?,
-    method: TransformationMethod?
-): View? {
-    setTransformationMethod(getTextView<TextView>(view), method)
-    return view
-}
-// =
 /**
  * 设置密码文本视图显示转换
  * @param textView          [TextView]
@@ -1959,39 +1675,11 @@ fun setTransformationMethod(
  * @param <T>               泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTransformationMethod(
-    textView: T?,
+fun TextView?.setTransformationMethod(
     isDisplayPassword: Boolean
-): T? {
-    if (textView != null) {
-        textView.transformationMethod =
-            if (isDisplayPassword) HideReturnsTransformationMethod.getInstance() else PasswordTransformationMethod.getInstance()
-    }
-    return textView
-}
-
-/**
- * 设置密码文本视图显示转换
- * @param view              [TextView]
- * @param isDisplayPassword 是否显示密码
- * @return [View]
- */
-fun setTransformationMethod(
-    view: View?,
-    isDisplayPassword: Boolean
-): View? {
-    setTransformationMethod(getTextView<TextView>(view), isDisplayPassword)
-    return view
-}
-// =
-/**
- * 获取 TextView Paint
- * @param view [TextView]
- * @param <T>  泛型
- * @return [Paint]
-</T> */
-fun TextView?.getPaint(view: View?): Paint? {
-    return getTextView<TextView>(view)?.paint
+) {
+    this?.transformationMethod =
+        if (isDisplayPassword) HideReturnsTransformationMethod.getInstance() else PasswordTransformationMethod.getInstance()
 }
 
 /**
@@ -2065,7 +1753,7 @@ fun getTextTopOffsetHeight(paint: Paint?): Int {
 fun TextView?.getTextWidth(
     text: String?
 ): Float {
-    return getTextWidth(getPaint(this), text)
+    return getTextWidth(this.getPaint(), text)
 }
 
 /**
@@ -2075,7 +1763,7 @@ fun TextView?.getTextWidth(
  * @return 字体宽度
 </T> */
 fun TextView?.getTextWidth(): Float {
-    return getTextWidth(getPaint(this), getText(this))
+    return getTextWidth(this.getPaint(), getText(this))
 }
 
 /**
@@ -2107,7 +1795,7 @@ fun getTextWidth(
     start: Int,
     end: Int
 ): Float {
-    return getTextWidth(getPaint(view), text, start, end)
+    return getTextWidth(view.getPaint(), text, start, end)
 }
 
 /**
@@ -2124,7 +1812,7 @@ fun getTextWidth(
     start: Int,
     end: Int
 ): Float {
-    return getTextWidth(getPaint(view), text, start, end)
+    return getTextWidth(view.getPaint(), text, start, end)
 }
 
 /**
