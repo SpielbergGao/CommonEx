@@ -167,76 +167,15 @@ fun <T : TextView?> setText(
 }
 
 /**
- * 设置文本
- * @param view [TextView]
- * @param text TextView text
- * @return [View]
- */
-fun setText(
-    view: View?,
-    text: CharSequence?
-): View? {
-    setText(getTextView<TextView>(view), text)
-    return view
-}
-
-/**
- * 设置多个 TextView 文本
- * @param text  TextView text
- * @param views View(TextView)[]
- * @return `true` success, `false` fail
- */
-fun setTexts(
-    text: CharSequence?,
-    vararg views: View?
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setText(view, text)
-        }
-        return true
-    }
-    return false
-}
-
-/**
- * 设置多个 TextView 文本
- * @param text  TextView text
- * @param views TextView[]
- * @param <T>   泛型
- * @return `true` success, `false` fail
-</T> */
-fun <T : TextView?> setTexts(
-    text: CharSequence?,
-    vararg views: T
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setText(view, text)
-        }
-        return true
-    }
-    return false
-}
-
-/**
  * 获取字体颜色
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [ColorStateList]
 </T> */
-fun <T : TextView?> getTextColors(textView: T?): ColorStateList? {
-    return textView?.textColors
+fun TextView?.getTextColors(): ColorStateList? {
+    return this?.textColors
 }
 
-/**
- * 获取字体颜色
- * @param view [TextView]
- * @return [ColorStateList]
- */
-fun getTextColors(view: View?): ColorStateList? {
-    return getTextColors(getTextView<TextView>(view))
-}
 
 /**
  * 设置字体颜色
@@ -245,26 +184,10 @@ fun getTextColors(view: View?): ColorStateList? {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextColor(
-    textView: T?,
+fun TextView?.setTextColor(
     @ColorInt color: Int
-): T? {
-    textView?.setTextColor(color)
-    return textView
-}
-
-/**
- * 设置字体颜色
- * @param view  [TextView]
- * @param color R.color.id
- * @return [View]
- */
-fun setTextColor(
-    view: View?,
-    @ColorInt color: Int
-): View? {
-    setTextColor(getTextView<TextView>(view), color)
-    return view
+) {
+    this?.setTextColor(color)
 }
 
 /**
@@ -274,45 +197,10 @@ fun setTextColor(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextColor(
-    textView: T?,
+fun TextView?.setTextColor(
     colors: ColorStateList?
-): T? {
-    textView?.setTextColor(colors)
-    return textView
-}
-
-/**
- * 设置字体颜色
- * @param view   [TextView]
- * @param colors [ColorStateList]
- * @return [View]
- */
-fun setTextColor(
-    view: View?,
-    colors: ColorStateList?
-): View? {
-    setTextColor(getTextView<TextView>(view), colors)
-    return view
-}
-
-/**
- * 设置多个 TextView 字体颜色
- * @param color R.color.id
- * @param views View(TextView)[]
- * @return `true` success, `false` fail
- */
-fun setTextColors(
-    @ColorInt color: Int,
-    vararg views: View?
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setTextColor(view, color)
-        }
-        return true
-    }
-    return false
+) {
+    this?.setTextColor(colors)
 }
 
 /**
@@ -322,36 +210,14 @@ fun setTextColors(
  * @param <T>   泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setTextColors(
-    @ColorInt color: Int,
-    vararg views: T
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setTextColor(view, color)
-        }
-        return true
-    }
-    return false
-}
-
-/**
- * 设置多个 TextView 字体颜色
- * @param colors [ColorStateList]
- * @param views  View(TextView)[]
- * @return `true` success, `false` fail
- */
 fun setTextColors(
-    colors: ColorStateList?,
-    vararg views: View?
+    @ColorInt color: Int,
+    vararg views: TextView
 ): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setTextColor(view, colors)
-        }
-        return true
+    for (view in views) {
+        view.setTextColor(color)
     }
-    return false
+    return true
 }
 
 /**
@@ -361,21 +227,16 @@ fun setTextColors(
  * @param <T>    泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setTextColors(
+fun setTextColors(
     colors: ColorStateList?,
-    vararg views: T
+    vararg views: TextView
 ): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setTextColor(view, colors)
-        }
-        return true
+    for (view in views) {
+        view.setTextColor(colors)
     }
-    return false
+    return true
 }
-// ========
-// = Html =
-// ========
+
 /**
  * 设置 Html 内容
  * @param textView [TextView]
@@ -398,39 +259,6 @@ fun <T : TextView?> setHtmlText(
 }
 
 /**
- * 设置 Html 内容
- * @param view    [TextView]
- * @param content Html content
- * @return [View]
- */
-fun setHtmlText(
-    view: View?,
-    content: String?
-): View? {
-    setHtmlText(getTextView<TextView>(view), content)
-    return view
-}
-
-/**
- * 设置多个 TextView Html 内容
- * @param content Html content
- * @param views   View(TextView)[]
- * @return `true` success, `false` fail
- */
-fun setHtmlTexts(
-    content: String?,
-    vararg views: View?
-): Boolean {
-    if (content != null && views != null) {
-        for (view in views) {
-            setHtmlText(view, content)
-        }
-        return true
-    }
-    return false
-}
-
-/**
  * 设置多个 TextView Html 内容
  * @param content Html content
  * @param views   TextView[]
@@ -449,9 +277,7 @@ fun <T : TextView?> setHtmlTexts(
     }
     return false
 }
-// ===========
-// = 字体相关 =
-// ===========
+
 /**
  * 获取字体
  * @param textView [TextView]
