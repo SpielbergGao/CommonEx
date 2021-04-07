@@ -150,23 +150,6 @@ fun getTexts(vararg views: TextView): List<String> {
 }
 
 /**
- * 设置文本
- * @param textView [TextView]
- * @param text     TextView text
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun <T : TextView?> setText(
-    textView: T?,
-    text: CharSequence?
-): T? {
-    if (textView != null) {
-        textView.text = text
-    }
-    return textView
-}
-
-/**
  * 获取字体颜色
  * @param textView [TextView]
  * @param <T>      泛型
@@ -244,18 +227,16 @@ fun setTextColors(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setHtmlText(
-    textView: T?,
+fun TextView?.setHtmlText(
     content: String?
-): T? {
-    if (textView != null && content != null) {
+) {
+    if (this != null && content != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            textView.text = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY)
+            this.text = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY)
         } else {
-            textView.text = Html.fromHtml(content)
+            this.text = Html.fromHtml(content)
         }
     }
-    return textView
 }
 
 /**
@@ -265,13 +246,13 @@ fun <T : TextView?> setHtmlText(
  * @param <T>     泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setHtmlTexts(
+fun setHtmlTexts(
     content: String?,
-    vararg views: T
+    vararg views: TextView
 ): Boolean {
-    if (content != null && views != null) {
+    if (content != null) {
         for (view in views) {
-            setHtmlText(view, content)
+            view.setHtmlText(content)
         }
         return true
     }
@@ -295,14 +276,10 @@ fun <T : TextView?> getTypeface(textView: T?): Typeface? {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTypeface(
-    textView: T?,
+fun TextView?.setTypeface(
     typeface: Typeface?
-): T? {
-    if (textView != null && typeface != null) {
-        textView.setTypeface(typeface)
-    }
-    return textView
+) {
+    this?.setTypeface(typeface)
 }
 
 /**
@@ -313,47 +290,13 @@ fun <T : TextView?> setTypeface(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTypeface(
-    textView: T?,
+fun TextView?.setTypeface(
     typeface: Typeface?,
     style: Int
-): T? {
-    if (textView != null && typeface != null) {
-        textView.setTypeface(typeface, style)
-    }
-    return textView
+) {
+    this?.setTypeface(typeface, style)
 }
 
-/**
- * 设置字体
- * @param view     [TextView]
- * @param typeface [Typeface] 字体样式
- * @return [View]
- */
-fun setTypeface(
-    view: View?,
-    typeface: Typeface?
-): View? {
-    setTypeface(getTextView<TextView>(view), typeface)
-    return view
-}
-
-/**
- * 设置字体
- * @param view     [TextView]
- * @param typeface [Typeface] 字体样式
- * @param style    样式
- * @return [View]
- */
-fun setTypeface(
-    view: View?,
-    typeface: Typeface?,
-    style: Int
-): View? {
-    setTypeface(getTextView<TextView>(view), typeface, style)
-    return view
-}
-// =
 /**
  * 设置字体大小 ( px 像素 )
  * @param textView [TextView]
@@ -361,11 +304,10 @@ fun setTypeface(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextSizeByPx(
-    textView: T,
+fun TextView?.setTextSizeByPx(
     size: Float
-): T {
-    return setTextSize(textView, TypedValue.COMPLEX_UNIT_PX, size)
+) {
+    this?.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
 }
 
 /**
@@ -375,11 +317,10 @@ fun <T : TextView?> setTextSizeByPx(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextSizeBySp(
-    textView: T,
+fun TextView?.setTextSizeBySp(
     size: Float
-): T {
-    return setTextSize(textView, TypedValue.COMPLEX_UNIT_SP, size)
+) {
+    this?.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
 }
 
 /**
@@ -389,11 +330,10 @@ fun <T : TextView?> setTextSizeBySp(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextSizeByDp(
-    textView: T,
+fun TextView?.setTextSizeByDp(
     size: Float
-): T {
-    return setTextSize(textView, TypedValue.COMPLEX_UNIT_DIP, size)
+) {
+    this?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
 }
 
 /**
@@ -403,69 +343,12 @@ fun <T : TextView?> setTextSizeByDp(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextSizeByIn(
-    textView: T,
+fun TextView?.setTextSizeByIn(
     size: Float
-): T {
-    return setTextSize(textView, TypedValue.COMPLEX_UNIT_IN, size)
-}
-// =
-/**
- * 设置字体大小 ( px 像素 )
- * @param view [TextView]
- * @param size 字体大小
- * @return [View]
- */
-fun setTextSizeByPx(
-    view: View?,
-    size: Float
-): View? {
-    setTextSize(getTextView<TextView>(view), TypedValue.COMPLEX_UNIT_PX, size)
-    return view
+) {
+    this?.setTextSize(TypedValue.COMPLEX_UNIT_IN, size)
 }
 
-/**
- * 设置字体大小 ( sp 缩放像素 )
- * @param view [TextView]
- * @param size 字体大小
- * @return [View]
- */
-fun setTextSizeBySp(
-    view: View?,
-    size: Float
-): View? {
-    setTextSize(getTextView<TextView>(view), TypedValue.COMPLEX_UNIT_SP, size)
-    return view
-}
-
-/**
- * 设置字体大小 ( dp 与设备无关的像素 )
- * @param view [TextView]
- * @param size 字体大小
- * @return [View]
- */
-fun setTextSizeByDp(
-    view: View?,
-    size: Float
-): View? {
-    setTextSize(getTextView<TextView>(view), TypedValue.COMPLEX_UNIT_DIP, size)
-    return view
-}
-
-/**
- * 设置字体大小 ( inches 英寸 )
- * @param view [TextView]
- * @param size 字体大小
- * @return [View]
- */
-fun setTextSizeByIn(
-    view: View?,
-    size: Float
-): View? {
-    setTextSize(getTextView<TextView>(view), TypedValue.COMPLEX_UNIT_IN, size)
-    return view
-}
-// =
 /**
  * 设置字体大小
  * @param textView [TextView]
