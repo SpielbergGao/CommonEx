@@ -357,50 +357,11 @@ fun TextView?.setTextSizeByIn(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setTextSize(
-    textView: T?,
+fun TextView?.setTextSize(
     unit: Int,
     size: Float
-): T? {
-    textView?.setTextSize(unit, size)
-    return textView
-}
-
-/**
- * 设置字体大小
- * @param view [TextView]
- * @param unit 字体参数类型
- * @param size 字体大小
- * @return [View]
- */
-fun setTextSize(
-    view: View?,
-    unit: Int,
-    size: Float
-): View? {
-    setTextSize(getTextView<TextView>(view), unit, size)
-    return view
-}
-// =
-/**
- * 设置多个 TextView 字体大小
- * @param views View(TextView)[]
- * @param unit  参数类型
- * @param size  字体大小
- * @return `true` success, `false` fail
- */
-fun setTextSizes(
-    views: Array<View?>?,
-    unit: Int,
-    size: Float
-): Boolean {
-    if (views != null) {
-        for (view in views) {
-            setTextSize(view, unit, size)
-        }
-        return true
-    }
-    return false
+) {
+    this?.setTextSize(unit, size)
 }
 
 /**
@@ -411,14 +372,14 @@ fun setTextSizes(
  * @param <T>   泛型
  * @return `true` success, `false` fail
 </T> */
-fun <T : TextView?> setTextSizes(
-    views: Array<T>?,
+fun setTextSizes(
+    views: Array<TextView>?,
     unit: Int,
     size: Float
 ): Boolean {
     if (views != null) {
         for (view in views) {
-            setTextSize(view, unit, size)
+            view.setTextSize(unit, size)
         }
         return true
     }
@@ -431,71 +392,18 @@ fun <T : TextView?> setTextSizes(
  * @param <T>      泛型
  * @return 字体大小 (px)
 </T> */
-fun <T : TextView?> getTextSize(textView: T?): Float {
-    return textView?.textSize ?: -1f
+fun TextView?.getTextSize(): Float {
+    return this?.textSize ?: -1f
 }
 
-/**
- * 获取 TextView 字体大小 ( px )
- * @param view [TextView]
- * @return 字体大小 (px)
- */
-fun getTextSize(view: View?): Float {
-    return getTextSize(getTextView<TextView>(view))
-}
-// =
 /**
  * 清空 flags
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> clearFlags(textView: T?): T? {
-    if (textView != null) {
-        textView.paintFlags = 0
-    }
-    return textView
-}
-
-/**
- * 清空 flags
- * @param view [TextView]
- * @return [View]
- */
-fun clearFlags(view: View?): View? {
-    clearFlags(getTextView<TextView>(view))
-    return view
-}
-// =
-/**
- * 设置 TextView flags
- * @param textView [TextView]
- * @param flags    flags
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun <T : TextView?> setPaintFlags(
-    textView: T?,
-    flags: Int
-): T? {
-    if (textView != null) {
-        textView.paintFlags = flags
-    }
-    return textView
-}
-
-/**
- * 设置 TextView flags
- * @param view  [TextView]
- * @param flags flags
- * @return [View]
- */
-fun setPaintFlags(
-    view: View?,
-    flags: Int
-): View? {
-    setPaintFlags(getTextView<TextView>(view), flags)
-    return view
+fun TextView?.clearFlags() {
+    this?.paintFlags = 0
 }
 
 /**
@@ -504,21 +412,8 @@ fun setPaintFlags(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setAntiAliasFlag(textView: T?): T? {
-    if (textView != null) {
-        textView.paintFlags = Paint.ANTI_ALIAS_FLAG
-    }
-    return textView
-}
-
-/**
- * 设置 TextView 抗锯齿 flags
- * @param view [TextView]
- * @return [View]
- */
-fun setAntiAliasFlag(view: View?): View? {
-    setAntiAliasFlag(getTextView<TextView>(view))
-    return view
+fun TextView?.setAntiAliasFlag() {
+    this?.paintFlags = Paint.ANTI_ALIAS_FLAG
 }
 
 /**
@@ -527,8 +422,8 @@ fun setAntiAliasFlag(view: View?): View? {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setBold(textView: T): T {
-    return setBold(textView, true)
+fun TextView?.setBold() {
+    this?.setBold(true)
 }
 
 /**
@@ -538,12 +433,10 @@ fun <T : TextView?> setBold(textView: T): T {
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setBold(
-    textView: T?,
+fun TextView?.setBold(
     isBold: Boolean
-): T? {
-    textView?.setTypeface(Typeface.defaultFromStyle(if (isBold) Typeface.BOLD else Typeface.NORMAL))
-    return textView
+) {
+    this?.setTypeface(Typeface.defaultFromStyle(if (isBold) Typeface.BOLD else Typeface.NORMAL))
 }
 
 /**
@@ -554,65 +447,21 @@ fun <T : TextView?> setBold(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setBold(
-    textView: T?,
+fun TextView?.setBold(
     typeface: Typeface?,
     isBold: Boolean
-): T? {
-    if (textView != null && typeface != null) {
-        textView.setTypeface(typeface, if (isBold) Typeface.BOLD else Typeface.NORMAL)
-    }
-    return textView
+) {
+    this?.setTypeface(typeface, if (isBold) Typeface.BOLD else Typeface.NORMAL)
 }
 
-/**
- * 设置 TextView 是否加粗
- * @param view [TextView]
- * @return [View]
- */
-fun setBold(view: View?): View? {
-    setBold(getTextView<TextView>(view), true)
-    return view
-}
-
-/**
- * 设置 TextView 是否加粗
- * @param view   [TextView]
- * @param isBold `true` yes, `false` no
- * @return [View]
- */
-fun setBold(
-    view: View?,
-    isBold: Boolean
-): View? {
-    setBold(getTextView<TextView>(view), isBold)
-    return view
-}
-
-/**
- * 设置 TextView 是否加粗
- * @param view     [TextView]
- * @param typeface [Typeface] 字体样式
- * @param isBold   `true` yes, `false` no
- * @return [View]
- */
-fun setBold(
-    view: View?,
-    typeface: Typeface?,
-    isBold: Boolean
-): View? {
-    setBold(getTextView<TextView>(view), typeface, isBold)
-    return view
-}
-// =
 /**
  * 设置下划线
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setUnderlineText(textView: T): T {
-    return setUnderlineText(textView, true)
+fun TextView?.setUnderlineText() {
+    this?.setUnderlineText(true)
 }
 
 /**
@@ -622,51 +471,23 @@ fun <T : TextView?> setUnderlineText(textView: T): T {
  * @param <T>         泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setUnderlineText(
-    textView: T?,
+fun TextView?.setUnderlineText(
     isAntiAlias: Boolean
-): T? {
-    if (textView != null) {
-        textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        if (isAntiAlias) {
-            textView.paintFlags = textView.paintFlags or Paint.ANTI_ALIAS_FLAG
-        }
+){
+    this?.paintFlags = this?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)?:0
+    if (isAntiAlias) {
+        this?.paintFlags = this?.paintFlags?.or(Paint.ANTI_ALIAS_FLAG) ?: 0
     }
-    return textView
-}
-// =
-/**
- * 设置下划线
- * @param view [TextView]
- * @return [View]
- */
-fun setUnderlineText(view: View?): View? {
-    setUnderlineText(getTextView<TextView>(view), true)
-    return view
 }
 
-/**
- * 设置下划线并加清晰
- * @param view        [TextView]
- * @param isAntiAlias 是否消除锯齿
- * @return [View]
- */
-fun setUnderlineText(
-    view: View?,
-    isAntiAlias: Boolean
-): View? {
-    setUnderlineText(getTextView<TextView>(view), isAntiAlias)
-    return view
-}
-// =
 /**
  * 设置中划线
  * @param textView [TextView]
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setStrikeThruText(textView: T): T {
-    return setStrikeThruText(textView, true)
+fun TextView?.setStrikeThruText(){
+    this?. setStrikeThruText(true)
 }
 
 /**
@@ -676,42 +497,15 @@ fun <T : TextView?> setStrikeThruText(textView: T): T {
  * @param <T>         泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setStrikeThruText(
-    textView: T?,
+fun TextView?.setStrikeThruText(
     isAntiAlias: Boolean
-): T? {
-    if (textView != null) {
-        textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        if (isAntiAlias) {
-            textView.paintFlags = textView.paintFlags or Paint.ANTI_ALIAS_FLAG
-        }
+){
+    this?.paintFlags = this?.paintFlags?.or(Paint.STRIKE_THRU_TEXT_FLAG) ?: 0
+    if (isAntiAlias) {
+        this?.paintFlags = this?.paintFlags?.or(Paint.ANTI_ALIAS_FLAG) ?: 0
     }
-    return textView
-}
-// =
-/**
- * 设置中划线
- * @param view [TextView]
- * @return [View]
- */
-fun setStrikeThruText(view: View?): View? {
-    setStrikeThruText(getTextView<TextView>(view), true)
-    return view
 }
 
-/**
- * 设置中划线并加清晰
- * @param view        [TextView]
- * @param isAntiAlias 是否消除锯齿
- * @return [View]
- */
-fun setStrikeThruText(
-    view: View?,
-    isAntiAlias: Boolean
-): View? {
-    setStrikeThruText(getTextView<TextView>(view), isAntiAlias)
-    return view
-}
 // =
 /**
  * 获取文字水平间距
@@ -720,8 +514,8 @@ fun setStrikeThruText(
  * @return 文字水平间距
 </T> */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-fun <T : TextView?> getLetterSpacing(textView: T?): Float {
-    return textView?.letterSpacing ?: 0f
+fun TextView?.getLetterSpacing(): Float {
+    return this?.letterSpacing ?: 0f
 }
 
 /**
