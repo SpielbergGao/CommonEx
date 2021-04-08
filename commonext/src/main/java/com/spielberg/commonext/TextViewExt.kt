@@ -473,8 +473,8 @@ fun TextView?.setUnderlineText() {
 </T> */
 fun TextView?.setUnderlineText(
     isAntiAlias: Boolean
-){
-    this?.paintFlags = this?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)?:0
+) {
+    this?.paintFlags = this?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG) ?: 0
     if (isAntiAlias) {
         this?.paintFlags = this?.paintFlags?.or(Paint.ANTI_ALIAS_FLAG) ?: 0
     }
@@ -486,8 +486,8 @@ fun TextView?.setUnderlineText(
  * @param <T>      泛型
  * @return [TextView]
 </T> */
-fun TextView?.setStrikeThruText(){
-    this?. setStrikeThruText(true)
+fun TextView?.setStrikeThruText() {
+    this?.setStrikeThruText(true)
 }
 
 /**
@@ -499,7 +499,7 @@ fun TextView?.setStrikeThruText(){
 </T> */
 fun TextView?.setStrikeThruText(
     isAntiAlias: Boolean
-){
+) {
     this?.paintFlags = this?.paintFlags?.or(Paint.STRIKE_THRU_TEXT_FLAG) ?: 0
     if (isAntiAlias) {
         this?.paintFlags = this?.paintFlags?.or(Paint.ANTI_ALIAS_FLAG) ?: 0
@@ -539,20 +539,7 @@ fun <T : TextView?> setLetterSpacing(
     return textView
 }
 
-/**
- * 设置文字水平间距
- * @param view          [TextView]
- * @param letterSpacing 文字水平间距
- * @return [View]
- */
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-fun setLetterSpacing(
-    view: View?,
-    letterSpacing: Float
-): View? {
-    setLetterSpacing(getTextView<TextView>(view), letterSpacing)
-    return view
-}
+
 // =
 /**
  * 获取文字行间距 ( 行高 )
@@ -561,8 +548,8 @@ fun setLetterSpacing(
  * @return 文字行间距 ( 行高 )
 </T> */
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-fun <T : TextView?> getLineSpacingExtra(textView: T?): Float {
-    return textView?.lineSpacingExtra ?: 0f
+fun TextView?.getLineSpacingExtra(): Float {
+    return this?.lineSpacingExtra ?: 0f
 }
 
 /**
@@ -583,11 +570,10 @@ fun <T : TextView?> getLineSpacingMultiplier(textView: T?): Float {
  * @param <T>         泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setLineSpacing(
-    textView: T,
+fun TextView?.setLineSpacing(
     lineSpacing: Float
-): T {
-    return setLineSpacingAndMultiplier(textView, lineSpacing, 1.0f)
+) {
+    this?.setLineSpacingAndMultiplier(lineSpacing, 1.0f)
 }
 
 /**
@@ -598,45 +584,13 @@ fun <T : TextView?> setLineSpacing(
  * @param <T>         泛型
  * @return [TextView]
 </T> */
-fun <T : TextView?> setLineSpacingAndMultiplier(
-    textView: T?,
+fun TextView?.setLineSpacingAndMultiplier(
     lineSpacing: Float,
     multiplier: Float
-): T? {
-    textView?.setLineSpacing(lineSpacing, multiplier)
-    return textView
-}
-// =
-/**
- * 设置文字行间距 ( 行高 )
- * @param view        [TextView]
- * @param lineSpacing 文字行间距 ( 行高 ), android:lineSpacingExtra
- * @return [View]
- */
-fun setLineSpacing(
-    view: View?,
-    lineSpacing: Float
-): View? {
-    setLineSpacingAndMultiplier(getTextView<TextView>(view), lineSpacing, 1.0f)
-    return view
+) {
+    this?.setLineSpacing(lineSpacing, multiplier)
 }
 
-/**
- * 设置文字行间距 ( 行高 )、行间距倍数
- * @param view        [TextView]
- * @param lineSpacing 文字行间距 ( 行高 ), android:lineSpacingExtra
- * @param multiplier  行间距倍数, android:lineSpacingMultiplier
- * @return [View]
- */
-fun setLineSpacingAndMultiplier(
-    view: View?,
-    lineSpacing: Float,
-    multiplier: Float
-): View? {
-    setLineSpacingAndMultiplier(getTextView<TextView>(view), lineSpacing, multiplier)
-    return view
-}
-// =
 /**
  * 获取字体水平方向的缩放
  * @param textView [TextView]
@@ -667,20 +621,6 @@ fun <T : TextView?> setTextScaleX(
     return textView
 }
 
-/**
- * 设置字体水平方向的缩放
- * @param view [TextView]
- * @param size 缩放比例
- * @return [View]
- */
-fun setTextScaleX(
-    view: View?,
-    size: Float
-): View? {
-    setTextScaleX(getTextView<TextView>(view), size)
-    return view
-}
-// =
 /**
  * 是否保留字体留白间隙区域
  * @param textView [TextView]
@@ -713,20 +653,6 @@ fun <T : TextView?> setIncludeFontPadding(
 }
 
 /**
- * 设置是否保留字体留白间隙区域
- * @param view           [TextView]
- * @param includePadding 是否保留字体留白间隙区域
- * @return [View]
- */
-fun setIncludeFontPadding(
-    view: View?,
-    includePadding: Boolean
-): View? {
-    setIncludeFontPadding(getTextView<TextView>(view), includePadding)
-    return view
-}
-// =
-/**
  * 获取输入类型
  * @param textView [TextView]
  * @param <T>      泛型
@@ -753,20 +679,6 @@ fun <T : TextView?> setInputType(
     return textView
 }
 
-/**
- * 设置输入类型
- * @param view [TextView]
- * @param type 类型
- * @return [View]
- */
-fun setInputType(
-    view: View?,
-    type: Int
-): View? {
-    setInputType(getTextView<TextView>(view), type)
-    return view
-}
-// =
 /**
  * 获取软键盘右下角按钮类型
  * @param textView [TextView]
@@ -795,20 +707,6 @@ fun <T : TextView?> setImeOptions(
 }
 
 /**
- * 设置软键盘右下角按钮类型
- * @param view       [TextView]
- * @param imeOptions 软键盘按钮类型
- * @return [View]
- */
-fun setImeOptions(
-    view: View?,
-    imeOptions: Int
-): View? {
-    setImeOptions(getTextView<TextView>(view), imeOptions)
-    return view
-}
-// =
-/**
  * 设置行数
  * @param textView [TextView]
  * @param lines    行数
@@ -823,20 +721,6 @@ fun <T : TextView?> setLines(
     return textView
 }
 
-/**
- * 设置行数
- * @param view  [TextView]
- * @param lines 行数
- * @return [View]
- */
-fun setLines(
-    view: View?,
-    lines: Int
-): View? {
-    setLines(getTextView<TextView>(view), lines)
-    return view
-}
-// =
 /**
  * 获取最大行数
  * @param textView [TextView]
@@ -866,20 +750,6 @@ fun <T : TextView?> setMaxLines(
 }
 
 /**
- * 设置最大行数
- * @param view     [TextView]
- * @param maxLines 最大行数
- * @return [View]
- */
-fun setMaxLines(
-    view: View?,
-    maxLines: Int
-): View? {
-    setMaxLines(getTextView<TextView>(view), maxLines)
-    return view
-}
-// =
-/**
  * 获取最小行数
  * @param textView [TextView]
  * @param <T>      泛型
@@ -907,20 +777,6 @@ fun <T : TextView?> setMinLines(
     return textView
 }
 
-/**
- * 设置最小行数
- * @param view     [TextView]
- * @param minLines 最小行数
- * @return [View]
- */
-fun setMinLines(
-    view: View?,
-    minLines: Int
-): View? {
-    setMinLines(getTextView<TextView>(view), minLines)
-    return view
-}
-// =
 /**
  * 获取最大字符宽度限制
  * @param textView [TextView]
@@ -950,20 +806,6 @@ fun <T : TextView?> setMaxEms(
 }
 
 /**
- * 设置最大字符宽度限制
- * @param view   [TextView]
- * @param maxEms 最大字符
- * @return [View]
- */
-fun setMaxEms(
-    view: View?,
-    maxEms: Int
-): View? {
-    setMaxEms(getTextView<TextView>(view), maxEms)
-    return view
-}
-// =
-/**
  * 获取最小字符宽度限制
  * @param textView [TextView]
  * @param <T>      泛型
@@ -992,20 +834,6 @@ fun <T : TextView?> setMinEms(
 }
 
 /**
- * 设置最小字符宽度限制
- * @param view   [TextView]
- * @param minEms 最小字符
- * @return [View]
- */
-fun setMinEms(
-    view: View?,
-    minEms: Int
-): View? {
-    setMinEms(getTextView<TextView>(view), minEms)
-    return view
-}
-// =
-/**
  * 设置指定字符宽度
  * @param textView [TextView]
  * @param ems      字符
@@ -1023,20 +851,6 @@ fun <T : TextView?> setEms(
 }
 
 /**
- * 设置指定字符宽度
- * @param view [TextView]
- * @param ems  字符
- * @return [View]
- */
-fun setEms(
-    view: View?,
-    ems: Int
-): View? {
-    setEms(getTextView<TextView>(view), ems)
-    return view
-}
-// =
-/**
  * 设置长度限制
  * @param textView  [TextView]
  * @param maxLength 长度限制
@@ -1053,50 +867,6 @@ fun <T : TextView?> setMaxLength(
         textView.filters = filters
     }
     return textView
-}
-
-/**
- * 设置长度限制
- * @param view      [TextView]
- * @param maxLength 长度限制
- * @return [View]
- */
-fun setMaxLength(
-    view: View?,
-    maxLength: Int
-): View? {
-    setMaxLength(getTextView<TextView>(view), maxLength)
-    return view
-}
-// =
-/**
- * 设置长度限制, 并且设置内容
- * @param textView  [TextView]
- * @param content   文本内容
- * @param maxLength 长度限制
- * @param <T>       泛型
- * @return [TextView]
-</T> */
-fun TextView?.setMaxLengthAndText(
-    content: CharSequence?,
-    maxLength: Int
-) {
-    setText(setMaxLength(this, maxLength), content)
-}
-
-/**
- * 设置长度限制, 并且设置内容
- * @param view      [TextView]
- * @param content   文本内容
- * @param maxLength 长度限制
- * @return [View]
- */
-fun setMaxLengthAndText(
-    view: View?,
-    content: CharSequence?,
-    maxLength: Int
-): View? {
-    return setText(setMaxLength(view, maxLength), content)
 }
 
 /**
@@ -1227,7 +997,7 @@ fun getTextHeight(paint: Paint?): Int {
  * @return 字体顶部偏移高度
 </T> */
 fun TextView?.getTextTopOffsetHeight(): Int {
-    return getTextTopOffsetHeight(getPaint(this))
+    return getTextTopOffsetHeight(this.getPaint())
 }
 
 /**
@@ -1266,7 +1036,7 @@ fun TextView?.getTextWidth(
  * @return 字体宽度
 </T> */
 fun TextView?.getTextWidth(): Float {
-    return getTextWidth(this.getPaint(), getText(this))
+    return getTextWidth(this.getPaint(), this.getText())
 }
 
 /**
@@ -1282,57 +1052,6 @@ fun getTextWidth(
     return if (paint != null && text != null) {
         paint.measureText(text)
     } else -1f
-}
-// =
-/**
- * 计算字体宽度
- * @param view  [TextView]
- * @param text  待测量文本
- * @param start 开始位置
- * @param end   结束位置
- * @return 字体宽度
- */
-fun getTextWidth(
-    view: View?,
-    text: String?,
-    start: Int,
-    end: Int
-): Float {
-    return getTextWidth(view.getPaint(), text, start, end)
-}
-
-/**
- * 计算字体宽度
- * @param view  [TextView]
- * @param text  待测量文本
- * @param start 开始位置
- * @param end   结束位置
- * @return 字体宽度
- */
-fun getTextWidth(
-    view: View?,
-    text: CharSequence?,
-    start: Int,
-    end: Int
-): Float {
-    return getTextWidth(view.getPaint(), text, start, end)
-}
-
-/**
- * 计算字体宽度
- * @param view  [TextView]
- * @param text  待测量文本
- * @param start 开始位置
- * @param end   结束位置
- * @return 字体宽度
- */
-fun getTextWidth(
-    view: View?,
-    text: CharArray?,
-    start: Int,
-    end: Int
-): Float {
-    return getTextWidth(view?.getPaint(), text, start, end)
 }
 
 /**
@@ -1487,11 +1206,11 @@ fun reckonTextSizeByHeight(
 fun reckonTextSizeByWidth(
     width: Int,
     textView: TextView?,
-    content: String? = getText<TextView?>(textView)
+    content: String? = textView.toString()
 ): Float {
     return if (textView == null || content == null) 0f else reckonTextSizeByWidth(
         width, textView.paint,
-        getTextSize(textView), content
+        textView.textSize, content
     )
 }
 
@@ -1580,7 +1299,7 @@ fun TextView?.calcTextWidth(
     text: String?,
     width: Float
 ): Int {
-    return calcTextWidth(getPaint(this), text, width)
+    return calcTextWidth(this.getPaint(), text, width)
 }
 
 /**
@@ -1591,7 +1310,7 @@ fun TextView?.calcTextWidth(
  * @return -1 表示没超过, 其他值表示对应的索引位置
 </T> */
 fun TextView?.calcTextWidth(width: Float): Int {
-    return calcTextWidth(getPaint(this), getText(this), width)
+    return calcTextWidth(this.getPaint(), this.getText(), width)
 }
 
 /**
@@ -1657,7 +1376,7 @@ fun TextView?.calcTextLine(
     text: String?,
     width: Float
 ): Int {
-    return calcTextLine(getPaint(this), text, width)
+    return calcTextLine(this.getPaint(), text, width)
 }
 
 /**
@@ -1670,7 +1389,7 @@ fun TextView?.calcTextLine(
 fun TextView?.calcTextLine(
     width: Float
 ): Int {
-    return calcTextLine(getPaint(this), getText(this), width)
+    return calcTextLine(this.getPaint(), this.getText(), width)
 }
 
 /**
