@@ -40,55 +40,6 @@ fun getHints(vararg views: TextView?): List<String> {
 }
 
 /**
- * 设置 Hint 文本
- * @param textView [TextView]
- * @param text     Hint text
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setHint(
-    text: CharSequence?
-) {
-    this?.hint = text
-}
-
-/**
- * 获取 Hint 字体颜色
- * @param textView [TextView]
- * @param <T>      泛型
- * @return [ColorStateList]
-</T> */
-fun TextView?.getHintTextColors(): ColorStateList? {
-    return this?.hintTextColors
-}
-
-/**
- * 设置 Hint 字体颜色
- * @param textView [TextView]
- * @param color    R.color.id
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setHintTextColor(
-    @ColorInt color: Int
-) {
-    this?.setHintTextColor(color)
-}
-
-/**
- * 设置 Hint 字体颜色
- * @param textView [TextView]
- * @param colors   [ColorStateList]
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setHintTextColor(
-    colors: ColorStateList?
-) {
-    this?.setHintTextColor(colors)
-}
-
-/**
  * 设置多个 TextView Hint 字体颜色
  * @param color R.color.id
  * @param views TextView[]
@@ -147,43 +98,6 @@ fun getTexts(vararg views: TextView): List<String> {
         }
     }
     return lists
-}
-
-/**
- * 获取字体颜色
- * @param textView [TextView]
- * @param <T>      泛型
- * @return [ColorStateList]
-</T> */
-fun TextView?.getTextColors(): ColorStateList? {
-    return this?.textColors
-}
-
-
-/**
- * 设置字体颜色
- * @param textView [TextView]
- * @param color    R.color.id
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setTextColor(
-    @ColorInt color: Int
-) {
-    this?.setTextColor(color)
-}
-
-/**
- * 设置字体颜色
- * @param textView [TextView]
- * @param colors   [ColorStateList]
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setTextColor(
-    colors: ColorStateList?
-) {
-    this?.setTextColor(colors)
 }
 
 /**
