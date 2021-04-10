@@ -74,16 +74,6 @@ fun setHintTextColors(
 }
 
 /**
- * 获取文本
- * @param textView [TextView]
- * @param <T>      泛型
- * @return [TextView.getText]
-</T> */
-fun TextView?.getText(): String? {
-    return this?.text?.toString()
-}
-
-/**
  * 获取多个 TextView 文本
  * @param views TextView[]
  * @param <T>   泛型
@@ -171,29 +161,6 @@ fun setHtmlTexts(
         return true
     }
     return false
-}
-
-/**
- * 获取字体
- * @param textView [TextView]
- * @param <T>      泛型
- * @return [Typeface]
-</T> */
-fun <T : TextView?> getTypeface(textView: T?): Typeface? {
-    return textView?.typeface
-}
-
-/**
- * 设置字体
- * @param textView [TextView]
- * @param typeface [Typeface] 字体样式
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setTypeface(
-    typeface: Typeface?
-) {
-    this?.setTypeface(typeface)
 }
 
 /**
@@ -950,7 +917,7 @@ fun TextView?.getTextWidth(
  * @return 字体宽度
 </T> */
 fun TextView?.getTextWidth(): Float {
-    return getTextWidth(this.getPaint(), this.getText())
+    return getTextWidth(this.getPaint(), this?.text?.toString())
 }
 
 /**
@@ -1224,7 +1191,7 @@ fun TextView?.calcTextWidth(
  * @return -1 表示没超过, 其他值表示对应的索引位置
 </T> */
 fun TextView?.calcTextWidth(width: Float): Int {
-    return calcTextWidth(this.getPaint(), this.getText(), width)
+    return calcTextWidth(this.getPaint(), this?.textString(), width)
 }
 
 /**
@@ -1303,7 +1270,7 @@ fun TextView?.calcTextLine(
 fun TextView?.calcTextLine(
     width: Float
 ): Int {
-    return calcTextLine(this.getPaint(), this.getText(), width)
+    return calcTextLine(this.getPaint(), this?.textString(), width)
 }
 
 /**
