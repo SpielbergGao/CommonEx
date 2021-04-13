@@ -225,20 +225,6 @@ fun TextView?.setTextSizeByIn(
 }
 
 /**
- * 设置字体大小
- * @param unit     字体参数类型
- * @param size     字体大小
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setTextSize(
-    unit: Int,
-    size: Float
-) {
-    this?.setTextSize(unit, size)
-}
-
-/**
  * 设置多个 TextView 字体大小
  * @param views TextView[]
  * @param unit  参数类型
@@ -258,24 +244,6 @@ fun setTextSizes(
         return true
     }
     return false
-}
-// =
-/**
- * 获取 TextView 字体大小 ( px )
- * @param <T>      泛型
- * @return 字体大小 (px)
-</T> */
-fun TextView?.getTextSize(): Float {
-    return this?.textSize ?: -1f
-}
-
-/**
- * 清空 flags
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.clearFlags() {
-    this?.paintFlags = 0
 }
 
 /**
@@ -493,28 +461,6 @@ fun TextView?.setLines(
     lines: Int
 ) {
     this?.setLines(lines)
-}
-
-/**
- * 获取最大行数
- * @param <T>      泛型
- * @return 最大行数
-</T> */
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-fun TextView?.getMaxLines(): Int {
-    return this?.maxLines ?: 0
-}
-
-/**
- * 设置最大行数
- * @param maxLines 最大行数
- * @param <T>      泛型
- * @return [TextView]
-</T> */
-fun TextView?.setMaxLines(
-    maxLines: Int
-) {
-    this?.maxLines = maxLines
 }
 
 /**
@@ -996,24 +942,28 @@ fun reckonTextSizeByWidth(
         // 获取字体内容宽度
         calcTextWidth = tvPaint.measureText(content).toInt()
         // 符合条件则直接返回
-        if (calcTextWidth == width) {
-            return textSize
-        } else if (calcTextWidth > width) { // 如果计算的字体宽度大于
-            textSize -= 0.5f
-            if (state == 2) {
-                if (calcTextWidth < width) {
-                    return textSize
-                }
+        when {
+            calcTextWidth == width -> {
+                return textSize
             }
-            state = 1
-        } else {
-            textSize += 0.5f
-            if (state == 1) {
-                if (calcTextWidth < width) {
-                    return textSize
+            calcTextWidth > width -> { // 如果计算的字体宽度大于
+                textSize -= 0.5f
+                if (state == 2) {
+                    if (calcTextWidth < width) {
+                        return textSize
+                    }
                 }
+                state = 1
             }
-            state = 2
+            else -> {
+                textSize += 0.5f
+                if (state == 1) {
+                    if (calcTextWidth < width) {
+                        return textSize
+                    }
+                }
+                state = 2
+            }
         }
     }
 }
@@ -1073,12 +1023,16 @@ fun calcTextWidth(
             // 获取字体宽度
             val textWidth = getTextWidth(paint, text, 0, mid)
             // 如果相等直接返回
-            if (textWidth == width) {
-                return mid
-            } else if (textWidth > width) {
-                end = mid - 1
-            } else {
-                start = mid + 1
+            when {
+                textWidth == width -> {
+                    return mid
+                }
+                textWidth > width -> {
+                    end = mid - 1
+                }
+                else -> {
+                    start = mid + 1
+                }
             }
         }
         // 计算最符合的位置
