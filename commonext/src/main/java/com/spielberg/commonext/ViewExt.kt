@@ -3,10 +3,13 @@ package com.spielberg.commonext
 import android.animation.Animator
 import android.animation.IntEvaluator
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -128,7 +131,7 @@ fun View.toBitmapExt(): Bitmap {
     }
 }
 
-fun View.addOnGlobalLayoutListenerExt(onGlobalLayout:()->Unit) {
+fun View.addOnGlobalLayoutListenerExt(onGlobalLayout: () -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -278,9 +281,15 @@ fun View.animateWidthAndHeightExt(
 
 fun View.makeMeasureSpecExt(measureSpec: Int): Int = when (measureSpec) {
     ViewGroup.LayoutParams.WRAP_CONTENT ->
-        View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measureSpec), View.MeasureSpec.AT_MOST)
+        View.MeasureSpec.makeMeasureSpec(
+            View.MeasureSpec.getSize(measureSpec),
+            View.MeasureSpec.AT_MOST
+        )
     else ->
-        View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measureSpec), View.MeasureSpec.EXACTLY)
+        View.MeasureSpec.makeMeasureSpec(
+            View.MeasureSpec.getSize(measureSpec),
+            View.MeasureSpec.EXACTLY
+        )
 }
 
 /**
@@ -314,7 +323,7 @@ fun View.hasLeftSpace(popupContentView: View): Boolean {
     return true
 }
 
-fun View.hasRightSpace(mCtx: Context,  popupContentView: View): Boolean {
+fun View.hasRightSpace(mCtx: Context, popupContentView: View): Boolean {
     val viewLoc = getViewLocationArr()
     if (mCtx.getScreenWidthExt() - viewLoc[0] - width <= popupContentView.measuredWidth) {
         return false
@@ -330,7 +339,7 @@ fun View.hasTopSpace(popupContentView: View): Boolean {
     return true
 }
 
-fun View.hasBottomSpace(mCtx: Context,  popupContentView: View): Boolean {
+fun View.hasBottomSpace(mCtx: Context, popupContentView: View): Boolean {
     val viewLoc = getViewLocationArr()
     if (mCtx.getScreenHeightExt() - viewLoc[1] - height <= popupContentView.measuredHeight) {
         return false
@@ -338,3 +347,22 @@ fun View.hasBottomSpace(mCtx: Context,  popupContentView: View): Boolean {
     return true
 }
 
+/**
+ * 获取 View context 所属的 Activity
+ * @return [Activity]
+ */
+fun View?.getViewActivity(): Activity? {
+    if (this == null) return null
+    try {
+        var context = this.context
+        while (context is ContextWrapper) {
+            if (context is Activity) {
+                return context
+            }
+            context = context.baseContext
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return null
+}
