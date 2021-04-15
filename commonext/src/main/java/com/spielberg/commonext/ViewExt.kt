@@ -9,7 +9,6 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -363,6 +362,23 @@ fun View?.getViewActivity(): Activity? {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+    }
+    return null
+}
+
+/**
+ * 获取指定 View 父布局
+ * @param view [View]
+ * @param <T>  泛型
+ * @return [View]
+</T> */
+fun <T : View?> getParent(view: View?): T? {
+    if (view != null) {
+        try {
+            return view.parent as T
+        } catch (e: java.lang.Exception) {
+           e.printStackTrace()
+        }
     }
     return null
 }
