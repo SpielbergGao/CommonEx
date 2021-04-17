@@ -9,6 +9,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -381,4 +382,17 @@ fun <T : View?> getParent(view: View?): T? {
         }
     }
     return null
+}
+
+/**
+ * 获取是否限制子 View 在其边界内绘制
+ * @return `true` yes, `false` no
+ */
+fun ViewGroup?.getClipChildren(): Boolean {
+    if (this != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return this.clipChildren
+        }
+    }
+    return true
 }
