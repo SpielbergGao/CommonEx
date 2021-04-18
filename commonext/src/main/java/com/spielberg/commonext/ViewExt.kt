@@ -396,3 +396,44 @@ fun ViewGroup?.getClipChildren(): Boolean {
     }
     return true
 }
+
+/**
+ * 获取指定索引 View
+ * @param viewGroup [ViewGroup]
+ * @param <T>       泛型
+ * @return [View]
+</T> */
+fun <T : View?> getChildAt(viewGroup: ViewGroup?): T? {
+    return getChildAt(viewGroup, 0)
+}
+
+/**
+ * 获取最后一个索引 View
+ * @param viewGroup [ViewGroup]
+ * @param <T>       泛型
+ * @return [View]
+</T> */
+fun <T : View?> getChildAtLast(viewGroup: ViewGroup?): T? {
+    return if (viewGroup == null) null else getChildAt(viewGroup, viewGroup.childCount - 1)
+}
+
+/**
+ * 获取指定索引 View
+ * @param viewGroup [ViewGroup]
+ * @param index     索引
+ * @param <T>       泛型
+ * @return [View]
+</T> */
+fun <T : View?> getChildAt(
+    viewGroup: ViewGroup?,
+    index: Int
+): T? {
+    if (viewGroup != null && index >= 0) {
+        try {
+            return viewGroup.getChildAt(index) as T
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+    return null
+}
