@@ -437,3 +437,41 @@ fun <T : View?> getChildAt(
     }
     return null
 }
+
+/**
+ * View 内容滚动位置 ( 相对于初始位置移动 )
+ * <pre>
+ * 无滚动过程
+</pre> *
+ * @param view [View]
+ * @param x    X 轴开始坐标
+ * @param y    Y 轴开始坐标
+ * @return [View]
+ */
+fun scrollTo(
+    view: View?,
+    x: Int,
+    y: Int
+): View? {
+    view?.scrollTo(x, y)
+    return view
+}
+
+/**
+ * View 内部滚动位置 ( 相对于上次移动的最后位置移动 )
+ * <pre>
+ * 无滚动过程
+</pre> *
+ * @param view [View]
+ * @param x    X 轴开始坐标
+ * @param y    Y 轴开始坐标
+ * @return [View]
+ */
+fun scrollBy(
+    view: View?,
+    x: Int,
+    y: Int
+): View? {
+    view?.scrollBy(x, y)
+    return view
+}
