@@ -475,3 +475,28 @@ fun scrollBy(
     view?.scrollBy(x, y)
     return view
 }
+
+/**
+ * 设置 ViewGroup 和其子控件两者之间的关系
+ * <pre>
+ * beforeDescendants : ViewGroup 会优先其子类控件而获取到焦点
+ * afterDescendants : ViewGroup 只有当其子类控件不需要获取焦点时才获取焦点
+ * blocksDescendants : ViewGroup 会覆盖子类控件而直接获得焦点
+ * android:descendantFocusability="blocksDescendants"
+</pre> *
+ * @param viewGroup    [ViewGroup]
+ * @param focusability [ViewGroup.FOCUS_BEFORE_DESCENDANTS]、[ViewGroup.FOCUS_AFTER_DESCENDANTS]、[ViewGroup.FOCUS_BLOCK_DESCENDANTS]
+ * @param <T>          泛型
+ * @return [ViewGroup]
+</T> */
+fun <T : ViewGroup?> setDescendantFocusability(
+    viewGroup: T?,
+    focusability: Int
+): T? {
+    try {
+        if (viewGroup != null) viewGroup.descendantFocusability = focusability
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return viewGroup
+}
