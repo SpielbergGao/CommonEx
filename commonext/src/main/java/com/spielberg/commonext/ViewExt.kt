@@ -500,3 +500,25 @@ fun <T : ViewGroup?> setDescendantFocusability(
     }
     return viewGroup
 }
+
+/**
+ * 设置 View 是否启用
+ * @param enabled `true` 启用, `false` 禁用
+ * @param views   View[]
+ * @return `true` 启用, `false` 禁用
+ */
+fun setEnabled(
+    enabled: Boolean,
+    vararg views: View?
+): Boolean {
+    var i = 0
+    val len = views.size
+    while (i < len) {
+        val view = views[i]
+        if (view != null) {
+            view.isEnabled = enabled
+        }
+        i++
+    }
+    return enabled
+}
