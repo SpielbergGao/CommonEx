@@ -522,3 +522,25 @@ fun setEnabled(
     }
     return enabled
 }
+
+/**
+ * 设置 View 是否可以点击
+ * @param clickable `true` 可点击, `false` 不可点击
+ * @param views     View[]
+ * @return `true` 可点击, `false` 不可点击
+ */
+fun setClickable(
+    clickable: Boolean,
+    vararg views: View?
+): Boolean {
+    var i = 0
+    val len = views.size
+    while (i < len) {
+        val view = views[i]
+        if (view != null) {
+            view.isClickable = clickable
+        }
+        i++
+    }
+    return clickable
+}
