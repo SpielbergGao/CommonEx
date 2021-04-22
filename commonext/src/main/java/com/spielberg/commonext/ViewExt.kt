@@ -544,3 +544,35 @@ fun setClickable(
     }
     return clickable
 }
+
+/**
+ * 判断 View 是否显示 ( 如果存在父级则判断父级 )
+ * <pre>
+ * 需要父布局已展示到 Window 上
+</pre> *
+ * @param view [View]
+ * @return `true` yes, `false` no
+ */
+fun isShown(view: View?): Boolean {
+    return view != null && view.isShown
+}
+
+/**
+ * 判断 View 是否都显示 ( 如果存在父级则判断父级 )
+ * @param views View[]
+ * @return `true` yes, `false` no
+ */
+fun isShowns(vararg views: View?): Boolean {
+    if (views.isNotEmpty()) {
+        var i = 0
+        val len = views.size
+        while (i < len) {
+            if (!isShown(views[i])) {
+                return false
+            }
+            i++
+        }
+        return true
+    }
+    return false
+}
