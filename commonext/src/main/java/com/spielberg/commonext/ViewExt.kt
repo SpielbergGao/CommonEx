@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
 
@@ -575,4 +576,22 @@ fun isShowns(vararg views: View?): Boolean {
         return true
     }
     return false
+}
+
+/**
+ * 获取 View Margin
+ * @return new int[] {left, top, right, bottom}
+ */
+fun View?.getMargin(): IntArray {
+    val margin = intArrayOf(0, 0, 0, 0)
+    if (this != null && this.layoutParams != null) {
+        if (this.layoutParams is MarginLayoutParams) {
+            val layoutParams = this.layoutParams as MarginLayoutParams
+            margin[0] = layoutParams.leftMargin
+            margin[1] = layoutParams.topMargin
+            margin[2] = layoutParams.rightMargin
+            margin[3] = layoutParams.bottomMargin
+        }
+    }
+    return margin
 }
