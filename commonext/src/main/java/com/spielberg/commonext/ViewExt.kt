@@ -595,3 +595,19 @@ fun View?.getMargin(): IntArray {
     }
     return margin
 }
+
+/**
+ * 获取 View Padding
+ * @param view [View]
+ * @return new int[] {left, top, right, bottom}
+ */
+fun View?.getPadding(): IntArray {
+    val padding = intArrayOf(0, 0, 0, 0)
+    if (this != null) {
+        padding[0] = this.paddingLeft
+        padding[1] = this.paddingTop
+        padding[2] = this.paddingRight
+        padding[3] = this.paddingBottom
+    }
+    return padding
+}
