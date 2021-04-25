@@ -449,3 +449,12 @@ private fun getFilePathByUri(
     }
     return ContentResolverUtils.getDataColumn(uri, null, null)
 }
+
+/**
+ * 判读 Uri authority 是否为 ExternalStorage Provider
+ * @param uri [Uri]
+ * @return `true` yes, `false` no
+ */
+fun isExternalStorageDocument(uri: Uri?): Boolean {
+    return if (uri == null) false else "com.android.externalstorage.documents" == uri.authority
+}
