@@ -396,7 +396,7 @@ private fun getFilePathByUri(
     val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
     // 4.4 之前以 content:// 开头, 比如 content://media/extenral/images/media/17766
     if (ContentResolver.SCHEME_CONTENT.equals(uri.scheme, ignoreCase = true) && !isKitKat) {
-        return if (isGooglePhotosUri(uri)) uri.lastPathSegment else ContentResolverUtils.getDataColumn(
+        return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
             uri,
             null,
             null
@@ -428,26 +428,33 @@ private fun getFilePathByUri(
                     Uri.parse("content://downloads/public_downloads"),
                     java.lang.Long.valueOf(id)
                 )
-                return ContentResolverUtils.getDataColumn(contentUri, null, null)
+                return getDataColumn(contentUri, null, null)
             } else if (isMediaDocument(uri)) { // MediaProvider
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":".toRegex()).toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
+                    else -> {
+                        Uri.parse("")
+                    }
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(split[1])
-                return ContentResolverUtils.getDataColumn(contentUri, selection, selectionArgs)
+                return getDataColumn(contentUri!!, selection, selectionArgs)
             }
         }
     }
-    return ContentResolverUtils.getDataColumn(uri, null, null)
+    return getDataColumn(uri, null, null)
 }
 
 /**
@@ -457,4 +464,60 @@ private fun getFilePathByUri(
  */
 fun isExternalStorageDocument(uri: Uri?): Boolean {
     return if (uri == null) false else "com.android.externalstorage.documents" == uri.authority
+}
+
+/**
+ * 判读 Uri authority 是否为 Downloads Provider
+ * @param uri [Uri]
+ * @return `true` yes, `false` no
+ */
+fun isDownloadsDocument(uri: Uri?): Boolean {
+    return if (uri == null) false else "com.android.providers.downloads.documents" == uri.authority
+}
+
+/**
+ * 判断 Uri authority 是否为 Media Provider
+ * @param uri [Uri]
+ * @return `true` yes, `false` no
+ */
+fun isMediaDocument(uri: Uri?): Boolean {
+    return if (uri == null) false else "com.android.providers.media.documents" == uri.authority
+}
+
+/**
+ * 判断 Uri authority 是否为 Google Photos Provider
+ * @param uri [Uri]
+ * @return `true` yes, `false` no
+ */
+fun isGooglePhotosUri(uri: Uri?): Boolean {
+    return if (uri == null) false else "com.google.android.apps.photos.content" == uri.authority
+}
+
+/**
+ * 获取 Uri Cursor 对应条件的数据行 data 字段
+ * @param uri           [Uri]
+ * @param selection     查询条件
+ * @param selectionArgs 查询条件的参数
+ * @return 对应条件的数据行 data 字段
+ */
+fun getDataColumn(
+    uri: Uri,
+    selection: String?,
+    selectionArgs: Array<String>?
+): String? {
+    var cursor: Cursor? = null
+    val column = "_data"
+    val projection = arrayOf(column)
+    try {
+        cursor = getApplicationByReflect()?.contentResolver?.query(uri, projection, selection, selectionArgs, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndexOrThrow(column)
+            return cursor.getString(columnIndex)
+        }
+    } catch (e: java.lang.Exception) {
+        e.printStackTrace()
+    } finally {
+        cursor?.close()
+    }
+    return null
 }
