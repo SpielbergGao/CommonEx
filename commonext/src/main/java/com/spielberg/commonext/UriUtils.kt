@@ -7,17 +7,16 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.storage.StorageManager
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-import androidx.core.content.FileProvider
 
 /**
  * Resource to uri.
@@ -374,4 +373,79 @@ fun uri2Bytes(uri: Uri?): ByteArray? {
             e.printStackTrace()
         }
     }
+}
+
+/**
+ * 通过 Uri 获取文件路径
+ * @param context [Context]
+ * @param uri     [Uri]
+ * @return 文件路径
+ */
+private fun getFilePathByUri(
+    context: Context?,
+    uri: Uri?
+): String? {
+    if (context == null || uri == null) return null
+
+    // 以 file:// 开头
+    if (ContentResolver.SCHEME_FILE.equals(uri.scheme, ignoreCase = true)) {
+        return uri.path
+    }
+
+    // 当前 Android SDK 是否大于等于 4.4
+    val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+    // 4.4 之前以 content:// 开头, 比如 content://media/extenral/images/media/17766
+    if (ContentResolver.SCHEME_CONTENT.equals(uri.scheme, ignoreCase = true) && !isKitKat) {
+        return if (isGooglePhotosUri(uri)) uri.lastPathSegment else ContentResolverUtils.getDataColumn(
+            uri,
+            null,
+            null
+        )
+    }
+
+    // 4.4 及之后以 content:// 开头, 比如 content://com.android.providers.media.documents/document/image%3A235700
+    if (ContentResolver.SCHEME_CONTENT.equals(
+            uri.scheme,
+            ignoreCase = true
+        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+    ) { // isKitKat
+        if (DocumentsContract.isDocumentUri(context, uri)) { // DocumentProvider
+            if (isExternalStorageDocument(uri)) { // ExternalStorageProvider
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).toTypedArray()
+                val type = split[0]
+                if ("primary".equals(type, ignoreCase = true)) {
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                            .toString() + "/" + split[1]
+                    } else {
+                        Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                    }
+                }
+            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
+                val id = DocumentsContract.getDocumentId(uri)
+                val contentUri = ContentUris.withAppendedId(
+                    Uri.parse("content://downloads/public_downloads"),
+                    java.lang.Long.valueOf(id)
+                )
+                return ContentResolverUtils.getDataColumn(contentUri, null, null)
+            } else if (isMediaDocument(uri)) { // MediaProvider
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).toTypedArray()
+                val type = split[0]
+                var contentUri: Uri? = null
+                if ("image" == type) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                } else if ("video" == type) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                } else if ("audio" == type) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                }
+                val selection = "_id=?"
+                val selectionArgs = arrayOf(split[1])
+                return ContentResolverUtils.getDataColumn(contentUri, selection, selectionArgs)
+            }
+        }
+    }
+    return ContentResolverUtils.getDataColumn(uri, null, null)
 }
