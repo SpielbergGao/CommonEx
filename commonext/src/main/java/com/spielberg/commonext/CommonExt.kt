@@ -5,8 +5,7 @@ import android.content.Context
 import android.text.Html
 import android.text.Spanned
 import android.view.View
-import java.io.File
-import java.io.IOException
+import java.io.*
 
 
 /**
@@ -94,4 +93,42 @@ fun <T> MutableList<T>.onDuplication(data: List<T>?) {
             this[index] = new
         }
     }
+}
+
+/**
+ * 获取异常栈信息
+ * @param throwable 异常
+ * @param errorInfo 获取失败返回字符串
+ * @return 异常栈信息字符串
+ */
+fun getThrowableStackTrace(
+    throwable: Throwable?,
+    errorInfo: String?
+): String? {
+    if (throwable != null) {
+        var printWriter: PrintWriter? = null
+        return try {
+            val writer: Writer = StringWriter()
+            printWriter = PrintWriter(writer)
+            throwable.printStackTrace(printWriter)
+            //                // 获取错误栈信息
+            //                StackTraceElement[] stElement = throwable.getStackTrace();
+            //                // 标题, 提示属于什么异常
+            //                printWriter.append(throwable.toString());
+            //                printWriter.append(DevFinal.NEW_LINE_STR);
+            //                // 遍历错误栈信息, 并且进行换行缩进
+            //                for (StackTraceElement element : stElement) {
+            //                    printWriter.append("\tat ");
+            //                    printWriter.append(element.toString());
+            //                    printWriter.append(DevFinal.NEW_LINE_STR);
+            //                }
+            writer.toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            e.toString()
+        } finally {
+            printWriter?.close()
+        }
+    }
+    return errorInfo
 }
