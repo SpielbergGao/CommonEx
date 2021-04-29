@@ -9,6 +9,9 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PixelFormat
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -610,4 +613,42 @@ fun View?.getPadding(): IntArray {
         padding[3] = this.paddingBottom
     }
     return padding
+}
+
+/**
+ * Drawable 转 Bitmap
+ * @param drawable 待转换图片
+ * @return [Bitmap]
+ */
+fun drawableToBitmap(drawable: Drawable?): Bitmap? {
+    if (drawable == null) return null
+    // 属于 BitmapDrawable 直接转换
+    if (drawable is BitmapDrawable) {
+        try {
+            if (drawable.bitmap != null) {
+                return drawable.bitmap
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+    try {
+        // 获取 drawable 的宽高
+        val width = drawable.intrinsicWidth
+        val height = drawable.intrinsicHeight
+        // 获取 drawable 的颜色格式
+        val config =
+            if (drawable.opacity != PixelFormat.OPAQUE) Bitmap.Config.ARGB_8888 else Bitmap.Config.RGB_565
+        // 创建 bitmap
+        val bitmap = Bitmap.createBitmap(width, height, config)
+        // 创建 bitmap 画布
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, width, height)
+        // 把 drawable 内容画到画布中
+        drawable.draw(canvas)
+        return bitmap
+    } catch (e: java.lang.Exception) {
+       e.printStackTrace()
+    }
+    return null
 }
