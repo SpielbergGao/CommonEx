@@ -132,3 +132,22 @@ fun getThrowableStackTrace(
     }
     return errorInfo
 }
+
+/**
+ * 去掉结尾多余的 . 与 0
+ * @param value 待处理数值
+ * @return 处理后的数值字符串
+ */
+fun subZeroAndDot(value: String): String {
+    if (value.isNotBlank() && value.isNotEmpty()) {
+        var str = value
+        if (str.indexOf(".") >= 0) {
+            // 去掉多余的 0
+            str = str.replace("0+?$".toRegex(), "")
+            // 最后一位是 . 则去掉
+            str = str.replace("[.]$".toRegex(), "")
+        }
+        return str
+    }
+    return value
+}
