@@ -151,3 +151,18 @@ fun subZeroAndDot(value: String): String {
     }
     return value
 }
+
+/**
+ * 计算百分比值 ( 最大 100%)
+ * @param value 指定值
+ * @param max   最大值
+ * @return 百分比值
+ */
+fun percentI(
+    value: Int,
+    max: Int
+): Int {
+    if (max <= 0) return 0
+    if (value <= 0) return 0
+    return if (value >= max) 1 else value / max
+}
