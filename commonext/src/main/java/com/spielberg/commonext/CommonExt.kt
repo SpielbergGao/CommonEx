@@ -287,3 +287,18 @@ fun percentL(
     if (value <= 0) return 0L
     return if (value >= max) 1L else value / max
 }
+
+/**
+ * 计算百分比值 ( 最大 100%)
+ * @param value 指定值
+ * @param max   最大值
+ * @return 百分比值
+ */
+fun percentL(
+    value: Double,
+    max: Double
+): Long {
+    if (max <= 0) return 0L
+    if (value <= 0) return 0L
+    return if (value >= max) 1L else (value / max).toLong()
+}
