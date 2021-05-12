@@ -302,3 +302,18 @@ fun percentL(
     if (value <= 0) return 0L
     return if (value >= max) 1L else (value / max).toLong()
 }
+
+/**
+ * 计算百分比值 ( 最大 100%)
+ * @param value 指定值
+ * @param max   最大值
+ * @return 百分比值
+ */
+fun percentF(
+    value: Int,
+    max: Int
+): Float {
+    if (max <= 0) return 0.0f
+    if (value <= 0) return 0.0f
+    return if (value >= max) 1.0f else value.toFloat() / max.toFloat()
+}
