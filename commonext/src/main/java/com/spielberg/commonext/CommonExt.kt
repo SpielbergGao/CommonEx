@@ -376,3 +376,17 @@ fun percentI2(
     if (max <= 0) return 0
     return if (value <= 0) 0 else value / max
 }
+
+/**
+ * 计算百分比值 ( 可超出 100%)
+ * @param value 指定值
+ * @param max   最大值
+ * @return 百分比值
+ */
+fun percentI2(
+    value: Float,
+    max: Float
+): Int {
+    if (max <= 0) return 0
+    return if (value <= 0) 0 else (value / max).toInt()
+}
