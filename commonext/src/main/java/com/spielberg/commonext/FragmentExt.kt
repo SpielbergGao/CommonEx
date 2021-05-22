@@ -1,7 +1,9 @@
 package com.spielberg.commonext
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.spielberg.commonext.handlers.LifecycleHandler
 
@@ -86,6 +88,22 @@ fun Fragment.remove(f: Fragment) {
 
 fun Fragment.popBackStackExt() {
     childFragmentManager.popBackStack(this.javaClass.simpleName, this.id)
+}
+
+inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+    beginTransaction().func().commit()
+}
+
+fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int) {
+    supportFragmentManager.inTransaction { add(frameId, fragment) }
+}
+
+fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
+    supportFragmentManager.inTransaction { replace(frameId, fragment) }
+}
+
+fun AppCompatActivity.removeFragment(fragment: Fragment) {
+    supportFragmentManager.inTransaction { remove(fragment) }
 }
 
 //post, postDelay
